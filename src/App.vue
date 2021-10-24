@@ -1,30 +1,36 @@
 <template>
-  
-  <HeaderMenu/>
 
-  <MenuButtons/>
+  <div class="head">
+    <div class="profile">
+      Profile
+      
+    </div>
+  </div>
+
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+
+
+  <router-view/>
 
 
 </template>
 
 <script>
-import MenuButtons from './components/MenuButtons.vue'
-import MenuSearch from './components/MenuSearch.vue'
-import HeaderMenu from './components/HeaderMenu.vue'
-
-export default {
-  name: 'App',
-  components: { MenuSearch, MenuButtons, HeaderMenu },
-
-  data(){
-    return{
-      buttons: true
-    }
-  },
+export default{
 
 }
 
 </script>
+
 
 <style>
 #app {
@@ -33,12 +39,24 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 
-.buttons{
-    width: 200px;
-    height: 100px;
-    margin: 50px;
-  }
+.head{
+  width: 100%;
+  height: 100px;
+  background-color: lightblue;
+  top: 0;
+  left: 0;
+  position: absolute;
+}
+
+.profile{
+  right: 20px;
+  width: 200px;
+  padding: 20px;
+  float: right;
+  margin-top: 20px;
+  position: relative;
+  background-color: royalblue;
+}
 </style>

@@ -1,4 +1,4 @@
-# korepetycje-app-client
+# korepetycje-app-client-1
 
 ## Project setup
 ```
