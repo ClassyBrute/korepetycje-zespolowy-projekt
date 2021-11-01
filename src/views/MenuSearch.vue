@@ -10,26 +10,16 @@
     <br>
 
 
-    <select name="cars" id="cars">
-      <option value="maths">Maths</option>
-      <option value="physics">Physics</option>
-      <option value="chemistry">Chemistry</option>
-      <option value="english">English</option>
-    </select>
 
-    <select name="cars" id="cars">
-      <option value="primary">Primary School</option>
-      <option value="middle">Middle School</option>
-      <option value="high">High School</option>
-      <option value="uni">University</option>
-    </select>
+    
 
-    <select name="cars" id="cars">
-      <option value="12-13">12:00-13:00</option>
-      <option value="13-14">13:00-14:00</option>
-      <option value="14-15">14:00-15:00</option>
-      <option value="15-16">15:00-16:00</option>
-    </select>
+    <div class="q-px-md">
+      <div class="q-gutter-md row">
+        <q-select outlined v-model="model1" :options="subject" label="Subject" hide-dropdown-icon style="width: 250px;"/>
+        <q-select outlined v-model="model2" :options="level" label="Level" hide-dropdown-icon style="width: 250px;"/>
+        <q-select outlined v-model="model3" :options="times" label="Time" hide-dropdown-icon style="width: 250px;"/>
+      </div>
+    </div>
 
   </div>
 
@@ -37,47 +27,68 @@
 
 
 <script>
-  export default {
+import { ref } from 'vue'
 
+export default {
+  setup () {
+    return {
+      model1: ref(null),
+      model2: ref(null),
+      model3: ref(null),
+
+      subject: [
+        {label: 'Maths',
+          value: 'maths',
+        },
+        {label: 'Physics',
+          value: 'physics',
+        }, 
+        {label: 'Chemistry',
+          value: 'chemistry',
+        }, 
+        {label: 'English',
+          value: 'english',
+        }, 
+      ],
+
+      level: [
+        {label: 'Primary School',
+          value: 'primary',
+        },
+        {label: 'Middle School',
+          value: 'middle',
+        }, 
+        {label: 'High School',
+          value: 'high',
+        }, 
+        {label: 'University',
+          value: 'uni',
+        }, 
+      ],
+
+      times: [
+        {label: '12:00-13:00',
+          value: '12-13',
+        },
+        {label: '13:00-14:00',
+          value: '13-14',
+        }, 
+        {label: '14:00-15:00',
+          value: '14-15',
+        }, 
+        {label: '15:00-16:00',
+          value: '15-16',
+        }, 
+      ]
+    }
   }
+}
 
 </script>
 
 
-<style >
+<style>
 
-  #cars {
-    display: inline-block;
-    font-size: 16px;
-    font-family: sans-serif;
-    font-weight: 700;
-    color: #444;
-    line-height: 1.3;
-    padding: .6em 1.4em .5em .8em;
-    width: fit-content;
-    box-sizing: border-box;
-    margin: 10px;
-    border: 1px solid #aaa;
-    border-radius: .5em;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: #fff;
-    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
-      linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%);
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-  }
-
-  /* Focus style */
-  #cars:focus {
-    border-color: #aaa;
-    box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
-    box-shadow: 0 0 0 3px -moz-mac-focusring;
-    color: #222; 
-    outline: none;
-  }
 
 
 </style>
