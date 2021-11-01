@@ -2,12 +2,8 @@
  
   <div>
 
-    <router-link class="buttons" :to="{ name: 'MenuSearch'}"> SEARCH </router-link>    
-    <router-link class="buttons" :to="{ name: 'MenuCreate'}"> CREATE </router-link>
-
-    <!-- <button class="buttons" @click="searchForm" > SEARCH </button> -->
-    <!-- <button class="buttons" @click="createForm"> CREATE </button> -->
-    
+    <router-link type="button" id="butt" class="btn btn-primary" :to="{ name: 'MenuSearch'}"> SEARCH </router-link>    
+    <router-link type="button" id="butt" class="btn btn-primary" :to="{ name: 'MenuCreate'}"> CREATE </router-link>
 
   </div>
 
@@ -32,19 +28,18 @@ export default {
 
 </script>
 
-<style >
-  .buttons{
-    width: 200px;
-    height: 100px;
-    margin: 50px;
-    background-color: yellowgreen;
-    padding: 30px;
-    border-radius: 10px;
-    text-decoration: none;
-  }
+<style>
 
-  .buttons:hover{
-    background-color: yellow;
+  #butt{
+    display: inline-block;
+    background-color: #444444;
+    color: white;
+    font-family: Arial;
+    font-size: 50px;
+    border-radius: 100px;
+    margin: 30px;
+    margin-top: 250px;
+    padding: 40px;
   }
 
 </style>
