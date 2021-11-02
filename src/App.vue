@@ -3,7 +3,7 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-scroll fixed-top shadow-0 border-bottom border-dark">
     <div class="container">
-      <a class="navbar-brand" href="#!"><i class="fab fa-mdb fa-4x"></i></a>
+      <a class="navbar-brand" href="/"><i class="fab fa-mdb fa-4x"></i></a>
       <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
         data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
         aria-label="Toggle navigation">
@@ -12,16 +12,19 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#!">Profile</a>
+            <a class="nav-link" href="/">Profile</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#!">Settings</a>
+            <a class="nav-link" href="/">Settings</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#!">About</a>
+            <a class="nav-link" href="/">About</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#!">Sign In</a>
+            <a class="nav-link" href="/sign_in">Sign In</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/sign_up">Sign Up</a>
           </li>
           <button type="button" class="btn btn-dark ms-3">Sign Up</button>
         </ul>
