@@ -5,7 +5,9 @@ import NotFound from '../views/NotFound.vue'
 import MenuSearch from '../views/MenuSearch.vue'
 import MenuCreate from '../views/MenuCreate.vue'
 import SignIn from '../views/SignIn.vue'
-import SignUp from '../views/SignUp.vue'
+import Profile from '../views/Profile.vue'
+import Settings from '../views/Settings.vue'
+
 
 const routes = [
   {
@@ -34,9 +36,14 @@ const routes = [
     component: SignIn
   },
   {
-    path: '/sign_up',
-    name: 'SignUp',
-    component: SignUp
+    path: '/profile',
+    name: 'Profile',
+    component: Profile
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings
   },
 
   //catch all 404

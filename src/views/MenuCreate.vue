@@ -1,12 +1,6 @@
 <template>
   <div class="plecy1">
 
-  	<br>
-  	<br>
-    <br>
-
-
-
   	menu create
   </div>
 

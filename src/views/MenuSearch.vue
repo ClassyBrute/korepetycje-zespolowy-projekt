@@ -1,19 +1,7 @@
 <template>
   <div>
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-
-
-
-    
-
-    <div class="q-px-md">
+    <div class="q-px-md" style="margin-top: 100px;">
       <div class="q-gutter-md row">
         <q-select outlined v-model="model1" :options="subject" label="Subject" hide-dropdown-icon style="width: 250px;"/>
         <q-select outlined v-model="model2" :options="level" label="Level" hide-dropdown-icon style="width: 250px;"/>
