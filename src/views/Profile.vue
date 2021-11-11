@@ -1,9 +1,48 @@
 <template>
  
-  <div>
+  <div class="q-pa-md q-gutter-sm">
 
-    <router-link type="button" id="butt" class="btn btn-primary" :to="{ name: 'MenuSearch'}"> SEARCH </router-link>    
-    <router-link type="button" id="butt" class="btn btn-primary" :to="{ name: 'MenuCreate'}"> CREATE </router-link>
+    <div class="q-pa-md" style="max-width: 400px">
+
+    <q-avatar><img src="https://cdn.quasar.dev/img/avatar.png"></q-avatar>
+
+    <q-form
+      @submit="onSubmit"
+      @reset="onReset"
+      class="q-gutter-md">
+
+      <q-input
+        filled
+        no-error-icon
+        v-model="name"
+        label="Your name *"
+        hint="Name and surname"
+        lazy-rules
+        :rules="[ val => val && val.length > 0 || 'Please type something']"
+      />
+
+      <q-input
+        filled
+        no-error-icon
+        type="number"
+        v-model="age"
+        label="Your age *"
+        lazy-rules
+        :rules="[
+          val => val !== null && val !== '' || 'Please type your age',
+          val => val > 0 && val < 100 || 'Please type a real age'
+        ]"
+      />
+
+      <q-toggle v-model="accept" label="I accept the license and terms" />
+
+      <div>
+        <q-btn label="Submit" type="submit" color="primary"/>
+        <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+      </div>
+    </q-form>
+
+  </div>
 
   </div>
 
@@ -12,8 +51,6 @@
 <script>
 
 export default {
-  name: 'Home',
-  components: { },
 
   data(){
     return{
@@ -30,16 +67,5 @@ export default {
 
 <style>
 
-  #butt{
-    display: inline-block;
-    background-color: #444444;
-    color: white;
-    font-family: Arial;
-    font-size: 50px;
-    border-radius: 100px;
-    margin: 30px;
-    margin-top: 250px;
-    padding: 40px;
-  }
 
 </style>
