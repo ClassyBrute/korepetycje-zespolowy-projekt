@@ -140,9 +140,8 @@ export default {
 
       fetch('http://78.8.98.73:3000/users', {
         method: 'POST', 
-        headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'http://78.8.98.73:3000/users'},
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data),
-        mode: 'no-cors'
         
 
       }).then(res => {
