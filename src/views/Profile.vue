@@ -9,7 +9,7 @@
                   <div class="d-flex flex-column align-items-center text-center">
                     <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
                     <div class="mt-3">
-                      <h4>Stara Karola</h4>
+                      <h4>{{name}}</h4>
                       <p class="text-secondary mb-1">Pełno prawny korepetytor</p>
                       <p class="text-muted font-size-sm">Wrocław, śródmieście </p>
                       <!-- <button class="btn btn-primary">Follow</button> -->
@@ -17,19 +17,6 @@
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="card mt-3">
-                <ul class="list-group list-group-flush">
-                  
-                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram mr-2 icon-inline text-danger"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>Instagram</h6>
-                    <span class="text-secondary">Janusz</span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook mr-2 icon-inline text-primary"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>Facebook</h6>
-                    <span class="text-secondary">Janusz</span>
-                  </li>
-                </ul>
               </div>
             </div>
             <div class="col-md-7">
@@ -40,7 +27,7 @@
                       <h6 class="mb-0">Name</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      Andrzej
+                      {{name}}
                     </div>
                   </div>
                   <hr>
@@ -49,7 +36,7 @@
                       <h6 class="mb-0">Surname</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      fip@jukmuh.al
+                      {{surname}}
                     </div>
                   </div>
                   <hr>
@@ -58,7 +45,7 @@
                       <h6 class="mb-0">Email</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      fip@jukmuh.al
+                      {{email}}
                     </div>
                   </div>
                   <hr>
@@ -67,7 +54,7 @@
                       <h6 class="mb-0">Phone</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      (239) 816-9029
+                      your phone number
                     </div>
                   </div>
                   <hr>
@@ -76,7 +63,7 @@
                       <h6 class="mb-0">Age</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      12
+                      {{age}}
                     </div>
                   </div>
                   <hr>
@@ -104,7 +91,33 @@
 </template>
 
 <script>
+export default {
 
+  data() {
+    return{
+      name: '',
+      surname: '',
+      email: '',
+      age: '',
+    }
+  },
+
+  mounted() {
+    fetch('https://mitonik.net/users', {
+      method: 'GET', 
+      headers: {'Content-Type': 'application/json'},
+
+    }).then((res) => res.json())
+      .then(data => {
+
+        this.name = data[11].name;
+        this.surname = data[11].surname;
+        this.email = data[11].email;
+        this.age = data[11].age;
+
+    });
+  }
+}
 
 </script>
 

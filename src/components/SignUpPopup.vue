@@ -1,12 +1,10 @@
 <template>
   <div class="backdrop" @click.self="closeSignUp">
     <div class="signupopen">
-<!--       <q-form
+      <q-form
         @reset="onReset"
-        @submit.prevent=""
-        class="q-gutter-md"
-        action="http://78.8.98.73:3000/users" 
-        method="post" >
+        @submit.prevent="onSubmit"
+        class="q-gutter-md" >
 
         <div style="font-size: 30px; font-weight: bold">Sign up for ...</div>
 
@@ -33,7 +31,7 @@
         <q-input  
           filled
           no-error-icon
-          v-model="regEmail" 
+          v-model="email" 
           name = "email"
           type="email" 
           label="Email *" 
@@ -41,11 +39,14 @@
           :rules="[val => !!val || 'Email is missing']"/>
 
         <q-input 
+          no-error-icon
           v-model="password" 
           name = "password"
           filled type="password"
           label="Password *" 
-          hint="Password" />
+          hint="Password" 
+          lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Please type something']"/>
 
         <q-input
           filled
@@ -64,99 +65,73 @@
           <q-btn label="Submit" type="submit" color="primary"/>
           <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
         </div>
-      </q-form> -->
-
-      <form action="http://78.8.98.73:3000/users" 
-        method="post" @submit.prevent="onSubmit">
-        <input v-model="name" type="text" name="name">
-        <input v-model="surname" type="text" name="surname">
-        <input v-model="email" type="text" name="email">
-        <input v-model="password" type="text" name="password">
-        <button type="submit">dupsko</button>
-
-      </form>
-
+      </q-form>
     </div>
   </div>
 
 </template>
 
 <script>
-import { ref } from 'vue'
-
 export default {
 
-  data(){
+  data() {
     return{
-        name: "asdasda",
-        surname: "asdasdasdas",
-        email: "jajo@jajo",
-        password: "asopdkas"
-      }
+      id: '',
+      name: '',
+      surname: '',
+      email: '',
+      password: '',
+      age: '',
+      accept: false,
+    }
   },
-
-
-
-  // setup() {
-    // const name = ref(null)
-    // const surname = ref(null)
-    // const regEmail = "asdjas@asodas"
-    // const password = ref(null)
-    // const age = ref(null)
-    // const accept = ref(false)
-
-    // return {
-      // name,
-      // surname,
-      // regEmail,
-      // password,
-      // age,
-      // accept,
-
-      
-
-      // onReset () {
-      //     name.value = null
-      //     surname.value = null
-      //     regEmail.value = null
-      //     password.value = null
-      //     age.value = null
-      //     accept.value = false
-      // },
-
-    // }
-  // },
 
   methods: {
     closeSignUp() {
       this.$emit('close');
     },
 
-
     onSubmit() {
+      if (this.accept) {
+        let data = {
+          name: this.name, 
+          surname: this.surname, 
+          email: this.email, 
+          password: this.password,
+          age: this.age};
 
-      let data = {name: this.name, surname: this.surname, email: this.email, password: this.password};
-
-
-      fetch('http://78.8.98.73:3000/users', {
-        method: 'POST', 
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data),
+        fetch('https://mitonik.net/users', {
+          method: 'POST', 
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data),
         
+        }).then(res => {
+          // ogarnianie statusów zwracanych przez serwer
+          if (res.status == 200) {
+            console.log("hurra")
+          }
+          else{
+            console.log("nie udalo sie")
+          }
 
-      }).then(res => {
-        console.log(res);
-      });
+          console.log(res);
+        });
 
-      // if (accept.value !== true) {
-      //   alert("Zgódź się na nasze nieistniejące TOS")
-      // }
-      // else {
-      //   closeSignUp    
-      // }
+      }
+      else {
+        alert("Zgódź się na nasze nieistniejące TOS")
+      }
+    },
+
+    onReset () {
+      this.name = '';
+      this.surname = '';
+      this.email = '';
+      this.password = '';
+      this.age = '';
+      this.accept = false;
     }
   }
-  
 }
 
 </script>
