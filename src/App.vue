@@ -34,16 +34,15 @@
 
   <br>
   <br>
-  <br>
 
-  <router-view/>
+  <router-view @click="offSignUp"/>
 
   <div v-if="showSignUp">
-      <SignUpPopup theme="sale" @close="toggleSignUp">
+      <SignUpPopup theme="sale" @close="offSignUp">
       </SignUpPopup>
   </div>
 
-  <footer class="bg-light text-center text-lg-start fixed-bottom">
+  <footer @click="offSignUp" class="bg-light text-center text-lg-start fixed-bottom">
     <div class="text-center p-2" style="background-color: #1A2331; color: #777e88">
       © 2021 Copyright: Uniwersytet Wrocławski
     </div>
@@ -65,6 +64,16 @@ export default{
   methods: {
     toggleSignUp() {
       this.showSignUp = !this.showSignUp
+    },
+    // onSignUp() {
+    //   if (this.showSignUp == false) {
+    //     this.showSignUp = true
+    //   }
+    // },
+    offSignUp() {
+      if (this.showSignUp == true) {
+        this.showSignUp = false
+      }
     },
   }
 }

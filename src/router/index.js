@@ -7,6 +7,7 @@ import MenuCreate from '../views/MenuCreate.vue'
 import SignIn from '../views/SignIn.vue'
 import Profile from '../views/Profile.vue'
 import Settings from '../views/Settings.vue'
+import FrontPage from '../views/FrontPage.vue'
 
 
 const routes = [
@@ -19,6 +20,11 @@ const routes = [
     path: '/about',
     name: 'About',
     component: About
+  },
+  {
+    path: '/front_page',
+    name: 'FrontPage',
+    component: FrontPage
   },
   {
     path: '/menu_search',
