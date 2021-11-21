@@ -1,9 +1,9 @@
 <template>
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-scroll fixed-top shadow-0 border-bottom border-dark">
+  <nav @click.self="offSignUp" class="navbar navbar-expand-lg navbar-scroll fixed-top shadow-0 border-bottom border-dark">
     <div class="container">
-      <router-link class="navbar-brand" :to="{name: 'Home'}">
+      <router-link @click="offSignUp" class="navbar-brand" :to="{name: 'Home'}">
         <i class="fab fa-mdb fa-4x"></i>
       </router-link>
       <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
@@ -11,18 +11,18 @@
         aria-label="Toggle navigation">
         <i class="fas fa-bars"></i>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div @click.self="offSignUp" class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
+          <li @click="offSignUp" class="nav-item">
             <router-link class="nav-link" :to="{name: 'Profile'}">Profile</router-link>
           </li>
-          <li class="nav-item">
+          <li @click="offSignUp" class="nav-item">
             <router-link class="nav-link" :to="{name: 'Settings'}">Settings</router-link>
           </li>
-          <li class="nav-item">
+          <li @click="offSignUp" class="nav-item">
             <router-link class="nav-link" :to="{name: 'About'}">About</router-link>
           </li>
-          <li class="nav-item">
+          <li @click="offSignUp" class="nav-item">
             <router-link class="nav-link" :to="{name: 'SignIn'}">Sign In</router-link>
           </li>
           <button @click="toggleSignUp" class="btn btn-dark ms-3">Sign Up</button>
@@ -114,6 +114,10 @@ body, html {
 .navbar-brand {
   font-size: unset;
   height: 2rem;
+}
+
+.btn .btn-dark .ms-3{
+  pointer-events: none;
 }
 
 </style>

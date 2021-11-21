@@ -1,18 +1,60 @@
 <template>
-  <div id="selectBox">
+  <div id="selectBox" class="item-center">
     <div class="q-px-md"  style="margin-top: 100px;">
-      <div class="q-gutter-md row">
-        <q-select popup-content-class="scroll overflow-hidden" outlined v-model="model1" :options="subject" label="Subject" hide-dropdown-icon style="width: 250px;"/>
-        <q-select popup-content-class="scroll overflow-hidden" outlined v-model="model2" :options="level" label="Level" hide-dropdown-icon style="width: 250px;"/>
-        <q-select popup-content-class="scroll overflow-hidden" multiple outlined v-model="model3" :options="times" label="Time" hide-dropdown-icon style="width: 250px;"/>
-        <q-select popup-content-class="scroll overflow-hidden" outlined v-model="model4" :options="rating" label="Rating" hide-dropdown-icon style="width: 250px;"/>
-        <q-select popup-content-class="scroll overflow-hidden" outlined v-model="model5" :options="cities" label="City" hide-dropdown-icon style="width: 250px;"/>
+      <h2> Search for what you desire! </h2>
+      <div class="q-gutter-md row justify-center" style="margin-top: 40px">
+        <q-select 
+          popup-content-class="scroll overflow-hidden" 
+          outlined 
+          v-model="model1" 
+          :options="subject" 
+          label="Subject" 
+          hide-dropdown-icon 
+          style="width: 250px;"/>
+
+        <q-select 
+          popup-content-class="scroll overflow-hidden" 
+          outlined 
+          v-model="model2" 
+          :options="level" 
+          label="Level" 
+          hide-dropdown-icon 
+          style="width: 250px;"/>
+
+        <q-select 
+          popup-content-class="scroll overflow-hidden" 
+          multiple 
+          outlined 
+          v-model="model3" 
+          :options="times" 
+          label="Time" 
+          hide-dropdown-icon 
+          style="width: 250px;"/>
+
+        <q-select 
+          popup-content-class="scroll overflow-hidden" 
+          outlined 
+          v-model="model4" 
+          :options="rating" 
+          label="Rating" 
+          hide-dropdown-icon 
+          style="width: 250px;"/>
+
+        <q-select 
+          popup-content-class="scroll overflow-hidden" 
+          outlined 
+          v-model="model5" 
+          :options="cities" 
+          label="City" 
+          hide-dropdown-icon 
+          style="width: 250px;"/>
+
       </div>
     </div>
-    <q-btn id="buttonSubmit"  color="primary" label="Search" />
+    <q-btn id="buttonSubmit" class="item-center"  color="primary" label="Search" size="lg"/>
   </div>
 
-  <div class="boxcard" >
+  <div class="boxcard item-center" >
     
     <div class="card" id="box2">
       <img
@@ -204,18 +246,8 @@ export default {
 
 <style>
 
-#selectBox {
-  position: relative;
-  left: 290px;
-  top: -20px;
-  width: 80%;
-}
-
 #buttonSubmit {
-  position: relative;
-  left: -100px;
   top: 30px;
-  width: 150px;
 }
 
 #box2 {
