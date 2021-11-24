@@ -53,11 +53,11 @@
           no-error-icon
           type="number"
           v-model="age"
-          label="Your age *"
-          hint="Age"
+          label="year of birth"
+          hint="year of birth"
           lazy-rules
           :rules="[val => val !== null && val !== '' || 'Please type your age',
-            val => val > 0 && val < 100 || 'Please type a real age']"/>
+            val => val > 1920 && val < 2021 || 'Please type a real age']"/>
 
         <q-toggle v-model="accept" label="I accept the license and terms" />
 
@@ -72,6 +72,7 @@
 </template>
 
 <script>
+
 export default {
 
   data() {
