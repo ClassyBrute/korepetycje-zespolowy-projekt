@@ -8,32 +8,49 @@
         <q-card rounded-borders class="q-pa-lg shadow-1" id="insidebox">
           <q-card-section>
             <q-form class="q-gutter-md" id="inputs">
-              <q-input square filled clearable v-model="email" type="email" label="email" />
-              <q-input square filled clearable v-model="password" type="password" label="password" />
+              <q-input square filled clearable v-model="email" type="email" label="Email *" />
+              <q-input square filled clearable v-model="password" type="password" label="Password *" />
             </q-form>
           </q-card-section>
           <q-card-actions class="q-px-md" >
             <q-btn id="button" unelevated color="light-blue-7" size="lg" class="full-width" label="Login" />
           </q-card-actions>
           <q-card-section id="p1" class="text-center q-pa-none">
-            <p  @click="showSignUp" class="text-grey-6">Not reigistered?<router-link :to="{ path: '/about'}" replace>Create an account</router-link></p>
+            <p @click="toggleSignUp" class="text-grey-6">Not registered? <a href="#">Create an account</a></p>
           </q-card-section>
         </q-card>
       </div>
     </div>
 </div>
 
+<div v-if="showSignUp">
+    <SignUpPopup theme="sale" @close="offSignUp">
+    </SignUpPopup>
+</div>
+
 </template>
 
 <script>
+import SignUpPopup from '../components/SignUpPopup'
 
 export default {
-  name: 'Login',
+  components: { SignUpPopup },
   data () {
     return {
       email: '',
-      password: ''
+      password: '',
+      showSignUp: false,
     }
+  },
+  methods: {
+    toggleSignUp() {
+      this.showSignUp = !this.showSignUp
+    },
+    offSignUp() {
+      if (this.showSignUp == true) {
+        this.showSignUp = false
+      }
+    },
   }
 }
 
@@ -45,15 +62,19 @@ export default {
   width: 450px; 
   margin:0 auto;
   top: 120px;
-  border-radius: 30px;
 }
 
 #insidebox {
   height: 350px;
+  width: 450px;
 }
 
 #inputs {
   top: 20px;
+  width: 426px;
+  left: -14px;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 #button{

@@ -23,7 +23,7 @@
           no-error-icon
           v-model="surname"
           name = "surname"
-          label="Your name *"
+          label="Your surname *"
           hint="Surname"
           lazy-rules
           :rules="[ val => val && val.length > 0 || 'Please type something']"/>
@@ -53,8 +53,8 @@
           no-error-icon
           type="number"
           v-model="age"
-          label="year of birth"
-          hint="year of birth"
+          label="Year of birth *"
+          hint="Year of birth"
           lazy-rules
           :rules="[val => val !== null && val !== '' || 'Please type your age',
             val => val > 1920 && val < 2021 || 'Please type a real age']"/>
