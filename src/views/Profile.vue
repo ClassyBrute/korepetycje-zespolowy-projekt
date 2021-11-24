@@ -103,17 +103,17 @@ export default {
   },
 
   mounted() {
-    fetch('https://mitonik.net/users', {
+    fetch('http://panoramx.ift.uni.wroc.pl:8888/users', {
       method: 'GET', 
       headers: {'Content-Type': 'application/json'},
 
     }).then((res) => res.json())
       .then(data => {
 
-        this.name = data[11].name;
-        this.surname = data[11].surname;
-        this.email = data[11].email;
-        this.age = data[11].age;
+        this.name = data[1].name;
+        this.surname = data[1].surname;
+        this.email = data[1].email;
+        this.age = data[1].age;
 
     });
   }

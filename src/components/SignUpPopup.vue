@@ -101,7 +101,7 @@ export default {
           password: this.password,
           age: this.age};
 
-        fetch('https://mitonik.net/users', {
+        fetch('http://panoramx.ift.uni.wroc.pl:8888/users', {
           method: 'POST', 
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(data),
