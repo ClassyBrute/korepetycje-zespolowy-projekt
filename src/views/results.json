@@ -1,0 +1,12 @@
+[
+    {
+        "_id": "1",
+        "subject": "Matematyka",
+        "description": "Quick example matematyka to build..."
+    },
+    {
+        "_id": "2",
+        "subject": "Fizyka",
+        "description": "Quick example fizyka to build..."
+    }
+]
