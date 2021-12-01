@@ -65,95 +65,15 @@
   </div>
 
   <div class="boxcard item-center">
-    <div class="card" id="box2">
+    <div v-for="dane in dane" :key="dane" class="card" id="box2">
       <img
         src="https://mdbootstrap.com/img/new/standard/nature/184.jpg"
         class="card-img-top"
         alt="..."
       />
       <div class="card-body">
-        <h5 class="card-title">{{ subject1 }}</h5>
-        <p class="card-text">{{ description1 }}</p>
-        <a href="#!" class="btn btn-primary">Button</a>
-      </div>
-    </div>
-
-    <div class="card" id="box2">
-      <img
-        src="https://mdbootstrap.com/img/new/standard/nature/184.jpg"
-        class="card-img-top"
-        alt="..."
-      />
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </p>
-        <a href="#!" class="btn btn-primary">Button</a>
-      </div>
-    </div>
-
-    <div class="card" id="box2">
-      <img
-        src="https://mdbootstrap.com/img/new/standard/nature/184.jpg"
-        class="card-img-top"
-        alt="..."
-      />
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </p>
-        <a href="#!" class="btn btn-primary">Button</a>
-      </div>
-    </div>
-
-    <div class="card" id="box2">
-      <img
-        src="https://mdbootstrap.com/img/new/standard/nature/184.jpg"
-        class="card-img-top"
-        alt="..."
-      />
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </p>
-        <a href="#!" class="btn btn-primary">Button</a>
-      </div>
-    </div>
-
-    <div class="card" id="box2">
-      <img
-        src="https://mdbootstrap.com/img/new/standard/nature/184.jpg"
-        class="card-img-top"
-        alt="..."
-      />
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </p>
-        <a href="#!" class="btn btn-primary">Button</a>
-      </div>
-    </div>
-
-    <div class="card" id="box2">
-      <img
-        src="https://mdbootstrap.com/img/new/standard/nature/184.jpg"
-        class="card-img-top"
-        alt="..."
-      />
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </p>
+        <h5 class="card-title">{{ dane.name }}</h5>
+        <p class="card-text">{{ dane.surname }}</p>
         <a href="#!" class="btn btn-primary">Button</a>
       </div>
     </div>
@@ -210,8 +130,7 @@ export default {
 
   data() {
     return {
-      subject1: "",
-      description1: "",
+      dane: [],
     }
   },
 
@@ -222,8 +141,9 @@ export default {
     })
       .then((res) => res.json())
       .then((data) => {
-        this.subject1 = data[1].name;
-        this.description1 = data[1].surname;
+        for (var i = 0; i <= 5; i++){
+          this.dane[i] = data[i];
+        }
       });
   },
 };
