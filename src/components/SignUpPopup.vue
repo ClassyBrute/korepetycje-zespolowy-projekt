@@ -101,14 +101,16 @@ export default {
           password: this.password,
           age: this.age};
 
-        fetch('http://panoramx.ift.uni.wroc.pl:8888/users', {
+        fetch('http://panoramx.ift.uni.wroc.pl:8888/register', {
           method: 'POST', 
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(data),
+          credentials: "same-origin"
+          
         
         }).then(res => {
           // ogarnianie statusów zwracanych przez serwer
-          if (res.status == 200) {
+          if (res.status == 201) {
             console.log("hurra")
           }
           else{

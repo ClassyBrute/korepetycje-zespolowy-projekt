@@ -72,8 +72,8 @@
         alt="..."
       />
       <div class="card-body">
-        <h5 class="card-title">{{ dane.name }}</h5>
-        <p class="card-text">{{ dane.surname }}</p>
+        <h5 class="card-title">{{ dane.id }}</h5>
+        <p class="card-text">{{ dane.id }}</p>
         <a href="#!" class="btn btn-primary">Button</a>
       </div>
     </div>
