@@ -72,8 +72,8 @@
         alt="..."
       />
       <div class="card-body">
-        <h5 class="card-title">{{ dane.id }}</h5>
-        <p class="card-text">{{ dane.id }}</p>
+        <h5 class="card-title">{{ dane._id }}</h5>
+        <p class="card-text">{{ dane._id }}</p>
         <a href="#!" class="btn btn-primary">Button</a>
       </div>
     </div>
@@ -82,6 +82,17 @@
 
 
 <script>
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
 import { ref } from "vue";
 
 export default {
@@ -135,12 +146,12 @@ export default {
   },
 
   mounted() {
-    fetch("http://panoramx.ift.uni.wroc.pl:8888/users", {
+    fetch("https://panoramx.ift.uni.wroc.pl:8888/users", {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + readCookie("jwt")},
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(data => {
         for (var i = 0; i <= 5; i++){
           this.dane[i] = data[i];
         }

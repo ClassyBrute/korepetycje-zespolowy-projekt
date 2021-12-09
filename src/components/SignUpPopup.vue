@@ -1,52 +1,53 @@
 <template>
   <div class="backdrop" @click.self="closeSignUp">
     <div class="signupopen">
-      <q-form
-        @reset="onReset"
-        @submit.prevent="onSubmit"
-        class="q-gutter-md" >
-
+      <q-form @reset="onReset" @submit.prevent="onSubmit" class="q-gutter-md">
         <div style="font-size: 30px; font-weight: bold">Sign up for ...</div>
 
         <q-input
           filled
           no-error-icon
           v-model="name"
-          name = "name"
+          name="name"
           label="Your name *"
           hint="Name"
           lazy-rules
-          :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+        />
 
         <q-input
           filled
           no-error-icon
           v-model="surname"
-          name = "surname"
+          name="surname"
           label="Your surname *"
           hint="Surname"
           lazy-rules
-          :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+        />
 
-        <q-input  
+        <q-input
           filled
           no-error-icon
-          v-model="email" 
-          name = "email"
-          type="email" 
-          label="Email *" 
+          v-model="email"
+          name="email"
+          type="email"
+          label="Email *"
           hint="Email"
-          :rules="[val => !!val || 'Email is missing']"/>
+          :rules="[(val) => !!val || 'Email is missing']"
+        />
 
-        <q-input 
+        <q-input
           no-error-icon
-          v-model="password" 
-          name = "password"
-          filled type="password"
-          label="Password *" 
-          hint="Password" 
+          v-model="password"
+          name="password"
+          filled
+          type="password"
+          label="Password *"
+          hint="Password"
           lazy-rules
-          :rules="[ val => val && val.length > 0 || 'Please type something']"/>
+          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+        />
 
         <q-input
           filled
@@ -56,103 +57,108 @@
           label="Year of birth *"
           hint="Year of birth"
           lazy-rules
-          :rules="[val => val !== null && val !== '' || 'Please type your age',
-            val => val > 1920 && val < 2021 || 'Please type a real age']"/>
+          :rules="[
+            (val) => (val !== null && val !== '') || 'Please type your age',
+            (val) => (val > 1920 && val < 2021) || 'Please type a real age',
+          ]"
+        />
 
         <q-toggle v-model="accept" label="I accept the license and terms" />
 
         <div>
-          <q-btn label="Submit" type="submit" color="primary"/>
-          <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+          <q-btn label="Submit" type="submit" color="primary" />
+          <q-btn
+            label="Reset"
+            type="reset"
+            color="primary"
+            flat
+            class="q-ml-sm"
+          />
         </div>
       </q-form>
     </div>
   </div>
-
 </template>
 
 <script>
-
 export default {
-
   data() {
-    return{
-      id: '',
-      name: '',
-      surname: '',
-      email: '',
-      password: '',
-      age: '',
+    return {
+      id: "",
+      name: "",
+      surname: "",
+      email: "",
+      password: "",
+      age: "",
       accept: false,
-    }
+    };
   },
 
   methods: {
     closeSignUp() {
-      this.$emit('close');
+      this.$emit("close");
     },
 
     onSubmit() {
       if (this.accept) {
         let data = {
-          name: this.name, 
-          surname: this.surname, 
-          email: this.email, 
+          name: this.name,
+          surname: this.surname,
+          email: this.email,
           password: this.password,
-          age: this.age};
+          age: this.age,
+        };
 
-        fetch('http://panoramx.ift.uni.wroc.pl:8888/register', {
-          method: 'POST', 
-          headers: {'Content-Type': 'application/json'},
+        fetch("https://panoramx.ift.uni.wroc.pl:8888/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
-          credentials: "same-origin"
-          
-        
-        }).then(res => {
-          // ogarnianie statusów zwracanych przez serwer
-          if (res.status == 201) {
-            console.log("hurra")
-          }
-          else{
-            console.log("nie udalo sie")
-          }
+        })
+          .then((response) => response.json())
+          .then((data123) => {
+            console.log(data123.token);
+              document.cookie = "jwt=" + data123.token; // write
+              console.log(document.cookie); // read
+          })
+          .then((res) => {
+            // ogarnianie statusów zwracanych przez serwer
+            if (res.status == 201) {
+              console.log("hurra");
 
-          console.log(res);
-        });
-
-      }
-      else {
-        alert("Zgódź się na nasze nieistniejące TOS")
+            } else {
+              console.log("nie udalo sie");
+            }
+          });
+      } else {
+        alert("Zgódź się na nasze nieistniejące TOS");
       }
     },
 
-    onReset () {
-      this.name = '';
-      this.surname = '';
-      this.email = '';
-      this.password = '';
-      this.age = '';
+    onReset() {
+      this.name = "";
+      this.surname = "";
+      this.email = "";
+      this.password = "";
+      this.age = "";
       this.accept = false;
-    }
-  }
-}
-
+    },
+  },
+};
 </script>
 
 <style>
-  .signupopen {
-    width: 400px;
-    padding: 20px;
-    margin: 150px auto;
-    background: white;
-    border-radius: 10px;
-  }
-  .backdrop {
-    top: 0;
-    position: fixed;
-    background: rgba(0,0,0,0.5);
-    width: 100%;
-    height: 100%;
-  }
-
+.signupopen {
+  width: 400px;
+  padding: 20px;
+  margin: 150px auto;
+  background: white;
+  border-radius: 10px;
+}
+.backdrop {
+  top: 0;
+  position: fixed;
+  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+}
 </style>

@@ -91,6 +91,17 @@
 </template>
 
 <script>
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
 export default {
 
   data() {
@@ -103,18 +114,21 @@ export default {
   },
 
   mounted() {
-    fetch('http://panoramx.ift.uni.wroc.pl:8888/users', {
+    fetch('https://panoramx.ift.uni.wroc.pl:8888/users', {
       method: 'GET', 
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'application/json', "Authorization": "Bearer " + readCookie("jwt")},
 
     }).then((res) => res.json())
       .then(data => {
 
-        this.name = data[1].name;
-        this.surname = data[1].surname;
-        this.email = data[1].email;
-        this.age = data[1].age;
-
+        // this.name = data[1].name;
+        // this.surname = data[1].surname;
+        // this.email = data[1].email;
+        // this.age = data[1].age;
+        this.name = data[0]._id;
+        this.surname = data[0]._id;
+        this.email = data[0]._id;
+        this.age = data[0]._id;
     });
   }
 }
