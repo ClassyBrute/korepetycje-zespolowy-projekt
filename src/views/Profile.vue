@@ -114,21 +114,17 @@ export default {
   },
 
   mounted() {
-    fetch('https://panoramx.ift.uni.wroc.pl:8888/users', {
+    fetch(`https://panoramx.ift.uni.wroc.pl:8888/profile`, {
       method: 'GET', 
       headers: {'Content-Type': 'application/json', "Authorization": "Bearer " + readCookie("jwt")},
 
     }).then((res) => res.json())
       .then(data => {
 
-        // this.name = data[1].name;
-        // this.surname = data[1].surname;
-        // this.email = data[1].email;
-        // this.age = data[1].age;
-        this.name = data[0]._id;
-        this.surname = data[0]._id;
-        this.email = data[0]._id;
-        this.age = data[0]._id;
+        this.name = data.name;
+        this.surname = data.surname;
+        this.email = data.email;
+        this.age = data.age;
     });
   }
 }
