@@ -63,34 +63,36 @@
       size="lg"
     />
   </div>
-
-  <div class="boxcard item-center">
-    <div v-for="dane in dane" :key="dane" class="card" id="box2">
+<div class="q-pa-md">
+  <div class="row col-8 inline">
+    <div v-for="offer in offers" :key="offer" class="card" id="box2">
       <img
         src="https://mdbootstrap.com/img/new/standard/nature/184.jpg"
         class="card-img-top"
         alt="..."
       />
       <div class="card-body">
-        <h5 class="card-title">{{ dane._id }}</h5>
-        <p class="card-text">{{ dane._id }}</p>
+        <h5 class="card-title">{{ offer.subjects[0] }}</h5>
+        <p class="card-text">{{ offer.time }}</p>
+        <p class="card-text">{{ offer.user }}</p>
         <a href="#!" class="btn btn-primary">Button</a>
       </div>
     </div>
   </div>
+</div>
 </template>
 
 
 <script>
 function readCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(";");
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == " ") c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
 }
 
 import { ref } from "vue";
@@ -142,18 +144,49 @@ export default {
   data() {
     return {
       dane: [],
-    }
+      offers: [],
+    };
   },
 
   mounted() {
-    fetch("https://panoramx.ift.uni.wroc.pl:8888/users", {
+    fetch("https://panoramx.ift.uni.wroc.pl:8888/offers/?p=1", {
       method: "GET",
-      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + readCookie("jwt")},
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + readCookie("jwt"),
+      },
     })
       .then((res) => res.json())
-      .then(data => {
-        for (var i = 0; i <= 5; i++){
-          this.dane[i] = data[i];
+      .then((data) => {
+        for (let i = 0; i < data.length; i++) {
+          this.dane.push(data[i]._id);
+        }
+        for (let i = 0; i < data.length; i++) {
+          fetch(`https://panoramx.ift.uni.wroc.pl:8888/offer/${this.dane[i]}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + readCookie("jwt"),
+            },
+          })
+            .then((res) => res.json())
+            .then((offer) => {
+              this.offers[i] = offer;
+              fetch(
+                `https://panoramx.ift.uni.wroc.pl:8888/user/${offer.userId}`,
+                {
+                  method: "GET",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + readCookie("jwt"),
+                  },
+                }
+              )
+                .then((res) => res.json())
+                .then((user) => {
+                  this.offers[i].user = user.name;
+                });
+            });
         }
       });
   },
@@ -174,6 +207,7 @@ export default {
 }
 
 .boxcard {
-  display: inline-flex;
+  display: flex;
+
 }
 </style>

@@ -119,7 +119,6 @@ export default {
     loggedInCheck() {
       if (document.cookie.includes("jwt")) {
         this.loggedIn = true;
-        console.log(this.loggedIn);
         return true;
       } else false;
     },
