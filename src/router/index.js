@@ -13,8 +13,8 @@ import FrontPage from '../views/FrontPage.vue'
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'FrontPage',
+    component: FrontPage
   },
   {
     path: '/about',
@@ -22,9 +22,9 @@ const routes = [
     component: About
   },
   {
-    path: '/front_page',
-    name: 'FrontPage',
-    component: FrontPage
+    path: '/home',
+    name: 'Home',
+    component: Home
   },
   {
     path: '/menu_search',

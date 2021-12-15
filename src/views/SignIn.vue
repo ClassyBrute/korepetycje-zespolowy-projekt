@@ -87,7 +87,7 @@ export default {
           console.log(data123.token);
             document.cookie = "jwt=" + data123.token; // write
             console.log(document.cookie); // read
-            this.$router.push({name: "Home"});
+            window.location.replace("/home")
         })
     },
   },
