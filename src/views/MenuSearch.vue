@@ -63,23 +63,24 @@
       size="lg"
     />
   </div>
-<div class="q-pa-md">
-  <div class="row col-8 inline">
-    <div v-for="offer in offers" :key="offer" class="card" id="box2">
-      <img
-        src="https://mdbootstrap.com/img/new/standard/nature/184.jpg"
-        class="card-img-top"
-        alt="..."
-      />
-      <div class="card-body">
-        <h5 class="card-title">{{ offer.subjects[0] }}</h5>
-        <p class="card-text">{{ offer.time }}</p>
-        <p class="card-text">{{ offer.user }}</p>
-        <a href="#!" class="btn btn-primary">Button</a>
+  <div class="q-pa-md">
+    <div class="row col-8 inline">
+      <div v-for="offer in offers" :key="offer" class="card" id="box2">
+        <img
+          src="https://mdbootstrap.com/img/new/standard/nature/184.jpg"
+          class="card-img-top"
+          alt="..."
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ offer.subjects[0] }}</h5>
+          <p class="card-text">{{ offer.time }}</p>
+          <p class="card-text">{{ offer.user }}</p>
+          <router-link class="nav-link btn btn-primary" :to="{ name: 'Offer', params: { offerId: offer._id }}"
+            >Button</router-link>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 
@@ -171,7 +172,7 @@ export default {
           })
             .then((res) => res.json())
             .then((offer) => {
-              this.offers[i] = offer;
+              this.offers.push(offer);
               fetch(
                 `https://panoramx.ift.uni.wroc.pl:8888/user/${offer.userId}`,
                 {
@@ -208,6 +209,5 @@ export default {
 
 .boxcard {
   display: flex;
-
 }
 </style>

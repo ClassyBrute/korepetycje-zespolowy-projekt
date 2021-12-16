@@ -82,13 +82,17 @@ export default {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       })
-        .then((response) => response.json())
-        .then((data123) => {
-          console.log(data123.token);
-            document.cookie = "jwt=" + data123.token; // write
-            console.log(document.cookie); // read
-            window.location.replace("/home")
-        })
+        .then((response) => {
+            if (response.status == 404) {
+              alert("Wrong email or password");
+              return;
+            }
+            response.json().then((data123) => {
+              document.cookie = "jwt=" + data123.token; // write
+              console.log(document.cookie); // read
+              window.location.replace("/home");
+            });
+          })
     },
   },
 };

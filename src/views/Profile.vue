@@ -12,7 +12,6 @@
                       <h4>{{name}}</h4>
                       <p class="text-secondary mb-1">Pełno prawny korepetytor</p>
                       <p class="text-muted font-size-sm">Wrocław, śródmieście </p>
-                      <!-- <button class="btn btn-primary">Follow</button> -->
                       <button class="btn btn-primary">Message</button>
                     </div>
                   </div>

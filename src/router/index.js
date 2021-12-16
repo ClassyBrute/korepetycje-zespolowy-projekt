@@ -8,6 +8,7 @@ import SignIn from '../views/SignIn.vue'
 import Profile from '../views/Profile.vue'
 import Settings from '../views/Settings.vue'
 import FrontPage from '../views/FrontPage.vue'
+import Offer from '../views/Offer.vue'
 
 
 const routes = [
@@ -50,6 +51,12 @@ const routes = [
     path: '/settings',
     name: 'Settings',
     component: Settings
+  },
+  {
+    path: '/offer',
+    name: 'Offer',
+    component: Offer,
+    props: true
   },
 
   //catch all 404

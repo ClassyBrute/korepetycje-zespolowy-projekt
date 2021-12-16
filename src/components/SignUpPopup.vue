@@ -114,21 +114,18 @@ export default {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         })
-          .then((response) => response.json())
-          .then((data123) => {
-            console.log(data123.token);
-              document.cookie = "jwt=" + data123.token; // write
-              console.log(document.cookie); // read
-          })
-          .then((res) => {
-            // ogarnianie statusów zwracanych przez serwer
-            if (res.status == 201) {
-              console.log("hurra");
-
-            } else {
-              console.log("nie udalo sie");
-            }
-          });
+          .then(
+            function(response) {
+              if (response.status == 403) {
+                alert("Account already exists");
+                return;
+              }
+              response.json().then((data123) => {
+                document.cookie = "jwt=" + data123.token; // write
+                console.log(document.cookie); // read
+                window.location.replace("/home");
+              });
+            })
       } else {
         alert("Zgódź się na nasze nieistniejące TOS");
       }
