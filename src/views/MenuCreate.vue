@@ -7,8 +7,9 @@
           popup-content-class="scroll 
           overflow-hidden" 
           outlined 
-          v-model="model1" 
+          v-model="subjects_" 
           :options="subject" 
+          
           label="Subject" 
           hide-dropdown-icon 
           :rules="[myRule]" 
@@ -17,7 +18,7 @@
         <q-select 
           popup-content-class="scroll overflow-hidden" 
           outlined 
-          v-model="model2" 
+          v-model="levels_" 
           :options="level" 
           label="Level" 
           hide-dropdown-icon 
@@ -28,8 +29,8 @@
           popup-content-class="scroll overflow-hidden" 
           multiple 
           outlined 
-          v-model="model3" 
-          :options="times" 
+          v-model="times_" 
+          :options="time" 
           label="Time" 
           hide-dropdown-icon 
           :rules="[myRule]" 
@@ -38,8 +39,8 @@
         <q-select 
           popup-content-class="scroll overflow-hidden" 
           outlined 
-          v-model="model5" 
-          :options="cities" 
+          v-model="cities_" 
+          :options="city"
           label="City" 
           hide-dropdown-icon 
           :rules="[myRule]" 
@@ -50,7 +51,7 @@
       <q-input class="inputField" outlined v-model="text" autogrow label="Describe your notice" style="width: 500px; "/>
       </div>
     </div>
-    <q-btn id="buttonSubmit" class="item-center" color="primary" label="Create" size="lg"/>
+    <q-btn @click="submit" id="buttonSubmit" class="item-center" color="primary" label="Create" size="lg"/>
   </div>
 
 </template>
@@ -59,13 +60,24 @@
 <script>
 import { ref } from 'vue'
 
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
 export default {
   setup () {
     return {
-      model1: ref(null),
-      model2: ref(null),
-      model3: ref(null),
-      model5: ref(null),
+      subjects_: ref(null),
+      levels_: ref(null),
+      times_: ref(null),
+      cities_: ref(null),
 
       subject: [
         {label: 'Maths',
@@ -97,7 +109,7 @@ export default {
         }, 
       ],
 
-      times: [
+      time: [
         {label: '12:00-13:00',
           value: '12-13',
         },
@@ -112,7 +124,7 @@ export default {
         }, 
       ],
 
-      cities: [
+      city: [
         {label: 'Wrocław',
           value: 'Wrocław',
         },
@@ -130,6 +142,51 @@ export default {
     myRule (val) {
       if (val == null) {
         alert("You must make a selection");
+      }
+    },
+
+    submit(){
+      if (this.subjects_ == null || this.levels_ == null || this.times_ == null || this.cities_ == null) {
+        alert("Please make a selection in every field");
+      }
+      else{
+        let times_array = [];
+        for (let i = 0; i < this.times_.length; i++) {
+          times_array.push(this.times_[i]);
+        }
+
+        let data = {
+          subjects: this.subjects_.value,
+          level: this.levels_.value,
+          // time: times_array,
+          time: "2022-01-05",
+          city: this.cities_.value,
+        }
+
+        fetch("https://panoramx.ift.uni.wroc.pl:8888/offers", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + readCookie("jwt"),
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => {
+                if (response.status == 401) {
+                  alert("Wrong email or password");
+                  return;
+                }
+                response.json().then((data123) => {
+                  console.log(data123);
+
+
+
+
+                  // document.cookie = "jwt=" + data123.token; // write
+                  // console.log(document.cookie); // read
+                  // window.location.replace("/home");
+                });
+              })
       }
     }
   }

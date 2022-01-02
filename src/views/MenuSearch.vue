@@ -80,6 +80,16 @@
         </div>
       </div>
     </div>
+
+    <div class="q-pa-lg flex flex-center" style="padding-top: 20px;">
+      <q-pagination
+        v-model="current"
+        color="black"
+        :max="10"
+        @click="pagination"
+        :max-pages="6"
+        :boundary-numbers="false"/>
+    </div>
   </div>
 </template>
 
@@ -106,6 +116,7 @@ export default {
       model3: ref(null),
       model4: ref(null),
       model5: ref(null),
+      current: ref(1),
 
       subject: [
         { label: "Maths", value: "maths" },
@@ -149,8 +160,54 @@ export default {
     };
   },
 
+  methods: {
+    pagination() {
+      this.offers = [];
+      fetch(`https://panoramx.ift.uni.wroc.pl:8888/offers/?p=${this.current}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + readCookie("jwt"),
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          for (let i = 0; i < data.length; i++) {
+            this.dane.push(data[i]._id);
+          }
+          for (let i = 0; i < data.length; i++) {
+            fetch(`https://panoramx.ift.uni.wroc.pl:8888/offer/${this.dane[i]}`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + readCookie("jwt"),
+              },
+            })
+              .then((res) => res.json())
+              .then((offer) => {
+                this.offers.push(offer);
+                fetch(
+                  `https://panoramx.ift.uni.wroc.pl:8888/user/${offer.userId}`,
+                  {
+                    method: "GET",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: "Bearer " + readCookie("jwt"),
+                    },
+                  }
+                )
+                  .then((res) => res.json())
+                  .then((user) => {
+                    this.offers[i].user = user.name;
+                  });
+              });
+          }
+        });
+    },
+  },
+
   mounted() {
-    fetch("https://panoramx.ift.uni.wroc.pl:8888/offers/?p=1", {
+    fetch(`https://panoramx.ift.uni.wroc.pl:8888/offers/?p=${this.current}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

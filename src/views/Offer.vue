@@ -1,15 +1,17 @@
 <template>
 
-<div class="q-pa-md">
-  <div class="row col-8 inline">
-    <div class="card" id="box2">
+<div class="q-pa-md fixed-center  " style="width:89%; top:42%; height:60%; left:64%">
+  <div class="row col-8 inline full-width    fixed-center ">
+    <div class="card" id="box2" style="width:65%;height:70%;" >
         <img
             src="https://mdbootstrap.com/img/new/standard/nature/184.jpg"
-            class="card-img-top"
             alt="..."
+            
+            style="width:100%; height:300px ; position:flex ; left:70px" 
+            
         />
-        <div class="card-body">
-            <h5 class="card-title">{{ this.offer[0].subjects[0] }}</h5>
+        <div class="card-body" style="width:100%; height:250px "   >
+            <h5 class="card-title" >{{ this.offer[0].subjects[0] }}</h5>
             <p class="card-text">{{ this.offer[0].time }}</p>
             <p class="card-text">{{ this.offer.user }}</p>
             <a href="#!" class="btn btn-primary">Button</a>
