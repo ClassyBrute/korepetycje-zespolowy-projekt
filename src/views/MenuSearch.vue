@@ -6,7 +6,7 @@
         <q-select
           popup-content-class="scroll overflow-hidden"
           outlined
-          v-model="model1"
+          v-model="subjects_"
           :options="subject"
           label="Subject"
           hide-dropdown-icon
@@ -16,7 +16,7 @@
         <q-select
           popup-content-class="scroll overflow-hidden"
           outlined
-          v-model="model2"
+          v-model="levels_"
           :options="level"
           label="Level"
           hide-dropdown-icon
@@ -27,8 +27,8 @@
           popup-content-class="scroll overflow-hidden"
           multiple
           outlined
-          v-model="model3"
-          :options="times"
+          v-model="times_"
+          :options="time"
           label="Time"
           hide-dropdown-icon
           style="width: 250px"
@@ -37,7 +37,7 @@
         <q-select
           popup-content-class="scroll overflow-hidden"
           outlined
-          v-model="model4"
+          v-model="ratings_"
           :options="rating"
           label="Rating"
           hide-dropdown-icon
@@ -47,8 +47,8 @@
         <q-select
           popup-content-class="scroll overflow-hidden"
           outlined
-          v-model="model5"
-          :options="cities"
+          v-model="cities_"
+          :options="city"
           label="City"
           hide-dropdown-icon
           style="width: 250px"
@@ -60,6 +60,7 @@
       class="item-center"
       color="primary"
       label="Search"
+      @click="search"
       size="lg"
     />
   </div>
@@ -75,20 +76,24 @@
           <h5 class="card-title">{{ offer.subjects[0] }}</h5>
           <p class="card-text">{{ offer.time }}</p>
           <p class="card-text">{{ offer.user }}</p>
-          <router-link class="nav-link btn btn-primary" :to="{ name: 'Offer', params: { offerId: offer._id }}"
-            >Button</router-link>
+          <router-link
+            class="nav-link btn btn-primary"
+            :to="{ name: 'Offer', params: { offerId: offer._id } }"
+            >Button</router-link
+          >
         </div>
       </div>
     </div>
 
-    <div class="q-pa-lg flex flex-center" style="padding-top: 20px;">
+    <div class="q-pa-lg flex flex-center" style="padding-top: 20px">
       <q-pagination
         v-model="current"
         color="black"
         :max="10"
         @click="pagination"
         :max-pages="6"
-        :boundary-numbers="false"/>
+        :boundary-numbers="false"
+      />
     </div>
   </div>
 </template>
@@ -111,11 +116,11 @@ import { ref } from "vue";
 export default {
   setup() {
     return {
-      model1: ref(null),
-      model2: ref(null),
-      model3: ref(null),
-      model4: ref(null),
-      model5: ref(null),
+      subjects_: ref(null),
+      levels_: ref(null),
+      times_: ref(null),
+      ratings_: ref(null),
+      cities_: ref(null),
       current: ref(1),
 
       subject: [
@@ -132,14 +137,14 @@ export default {
         { label: "University", value: "uni" },
       ],
 
-      times: [
+      time: [
         { label: "12:00-13:00", value: "12-13" },
         { label: "13:00-14:00", value: "13-14" },
         { label: "14:00-15:00", value: "14-15" },
         { label: "15:00-16:00", value: "15-16" },
       ],
 
-      cities: [
+      city: [
         { label: "Wrocław", value: "Wrocław" },
         { label: "Poznań", value: "Poznań" },
         { label: "Legnica", value: "Legnica" },
@@ -161,9 +166,62 @@ export default {
   },
 
   methods: {
+    search() { 
+      this.offers = [];
+      this.dane = [];
+      fetch(`https://panoramx.ift.uni.wroc.pl:8888/offers?subjects=${this.subjects_.value}`,{
+      // &level=${this.levels_.value}&cities=${this.cities_.value}`, {   
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + readCookie("jwt"),
+          },
+        })
+        .then((res) => res.json())
+        .then((data) => {
+          for (let i = 0; i < data.length; i++) {
+            this.dane.push(data[i]._id);
+          }
+          for (let i = 0; i < data.length; i++) {
+            fetch(
+              `https://panoramx.ift.uni.wroc.pl:8888/offer/${this.dane[i]}`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer " + readCookie("jwt"),
+                },
+              }
+            )
+              .then((res) => res.json())
+              .then((offer) => {
+                this.offers.push(offer);
+                fetch(
+                  `https://panoramx.ift.uni.wroc.pl:8888/user/${offer.userId}`,
+                  {
+                    method: "GET",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: "Bearer " + readCookie("jwt"),
+                    },
+                  }
+                )
+                  .then((res) => res.json())
+                  .then((user) => {
+                    this.offers[i].user = user.name;
+                  });
+              });
+          }
+        });
+        console.log(this.dane);
+    },
+
+
+
     pagination() {
       this.offers = [];
-      fetch(`https://panoramx.ift.uni.wroc.pl:8888/offers/?p=${this.current}`, {
+      this.dane = [];
+      fetch(`https://panoramx.ift.uni.wroc.pl:8888/offers?p=${this.current}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -176,13 +234,16 @@ export default {
             this.dane.push(data[i]._id);
           }
           for (let i = 0; i < data.length; i++) {
-            fetch(`https://panoramx.ift.uni.wroc.pl:8888/offer/${this.dane[i]}`, {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + readCookie("jwt"),
-              },
-            })
+            fetch(
+              `https://panoramx.ift.uni.wroc.pl:8888/offer/${this.dane[i]}`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer " + readCookie("jwt"),
+                },
+              }
+            )
               .then((res) => res.json())
               .then((offer) => {
                 this.offers.push(offer);
@@ -207,7 +268,9 @@ export default {
   },
 
   mounted() {
-    fetch(`https://panoramx.ift.uni.wroc.pl:8888/offers/?p=${this.current}`, {
+    this.offers = [];
+      this.dane = [];
+    fetch(`https://panoramx.ift.uni.wroc.pl:8888/offers?p=${this.current}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

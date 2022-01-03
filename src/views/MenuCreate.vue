@@ -178,13 +178,8 @@ export default {
                 }
                 response.json().then((data123) => {
                   console.log(data123);
-
-
-
-
-                  // document.cookie = "jwt=" + data123.token; // write
-                  // console.log(document.cookie); // read
-                  // window.location.replace("/home");
+                  // window.location.replace("/offer")
+                  // i jeszcze jako params wyslac offer._id
                 });
               })
       }
