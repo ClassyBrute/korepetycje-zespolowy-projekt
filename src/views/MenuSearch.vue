@@ -145,9 +145,9 @@ export default {
       ],
 
       city: [
-        { label: "Wrocław", value: "Wrocław" },
-        { label: "Poznań", value: "Poznań" },
-        { label: "Legnica", value: "Legnica" },
+        { label: "Wrocław", value: "wroclaw" },
+        { label: "Poznań", value: "poznan" },
+        { label: "Legnica", value: "legnica" },
       ],
 
       rating: [
@@ -169,8 +169,27 @@ export default {
     search() { 
       this.offers = [];
       this.dane = [];
-      fetch(`https://panoramx.ift.uni.wroc.pl:8888/offers?subjects=${this.subjects_.value}`,{
-      // &level=${this.levels_.value}&cities=${this.cities_.value}`, {   
+      
+      let variables = [[this.subjects_, 'subjects='], [this.levels_, 'level='], [this.times_, 'time='],
+        [this.ratings_, 'ratings='], [this.cities_, 'cities=']];
+
+      let link = 'https://panoramx.ift.uni.wroc.pl:8888/offers?';
+      let amount = 0;
+
+      variables.forEach(function(variable) {
+        if (variable[0] != null) {
+          if (variable[0].value != null) {
+            if (amount >= 1) {
+              link = link + '&';
+            }
+            link = link + variable[1] + variable[0].value;
+            console.log(link);
+            amount += 1;
+          }
+        }
+      });
+
+      fetch(`${link}`,{
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -213,7 +232,6 @@ export default {
               });
           }
         });
-        console.log(this.dane);
     },
 
 

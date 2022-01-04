@@ -48,7 +48,7 @@
 
       </div>
       <div class="q-gutter-md row justify-center" style="margin-top: 40px; margin-bottom: 40px">
-      <q-input class="inputField" outlined v-model="text" autogrow label="Describe your notice" style="width: 500px; "/>
+      <q-input class="inputField" outlined v-model="text_" autogrow label="Describe your notice" style="width: 500px; "/>
       </div>
     </div>
     <q-btn @click="submit" id="buttonSubmit" class="item-center" color="primary" label="Create" size="lg"/>
@@ -78,6 +78,7 @@ export default {
       levels_: ref(null),
       times_: ref(null),
       cities_: ref(null),
+      text_: ref(null),
 
       subject: [
         {label: 'Maths',
@@ -126,13 +127,13 @@ export default {
 
       city: [
         {label: 'Wrocław',
-          value: 'Wrocław',
+          value: 'wroclaw',
         },
         {label: 'Poznań',
-          value: 'Poznań',
+          value: 'poznan',
         }, 
         {label: 'Legnica',
-          value: 'Legnica',
+          value: 'legnica',
         }, 
       ],
     }
@@ -160,7 +161,8 @@ export default {
           level: this.levels_.value,
           // time: times_array,
           time: "2022-01-05",
-          city: this.cities_.value,
+          cities: this.cities_.value,
+          texts: this.text_.value,
         }
 
         fetch("https://panoramx.ift.uni.wroc.pl:8888/offers", {
@@ -176,11 +178,13 @@ export default {
                   alert("Wrong email or password");
                   return;
                 }
-                response.json().then((data123) => {
-                  console.log(data123);
+                if (response.status == 200) {
+                  // response.json().then((data123) => {
+                  console.log(response);
                   // window.location.replace("/offer")
                   // i jeszcze jako params wyslac offer._id
-                });
+                // });
+                }
               })
       }
     }
