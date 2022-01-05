@@ -110,7 +110,7 @@ export default {
           birthday: this.age,
         };
 
-        fetch("https://panoramx.ift.uni.wroc.pl:8888/v1/accounts", {
+        fetch("https://panoramx.ift.uni.wroc.pl:8888/v1/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),

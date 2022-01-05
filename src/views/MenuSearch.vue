@@ -23,20 +23,6 @@
           style="width: 250px"
         />
 
-        <Datepicker v-model = 'times_' style="width: 250px; opacity:80%;">
-        </Datepicker>
-
-        <!-- <q-select
-          popup-content-class="scroll overflow-hidden"
-          multiple
-          outlined
-          v-model="times_"
-          :options="time"
-          label="Time"
-          hide-dropdown-icon
-          style="width: 250px"
-        /> -->
-
         <q-select
           popup-content-class="scroll overflow-hidden"
           outlined
@@ -56,6 +42,14 @@
           hide-dropdown-icon
           style="width: 250px"
         />
+
+        <Datepicker 
+        placeholder="Select Date Range"
+        range
+        v-model = 'times_' 
+        style="width: 400px; opacity:80%;">
+        </Datepicker>
+
       </div>
     </div>
     <q-btn
@@ -76,8 +70,11 @@
           alt="..."
         />
         <div class="card-body">
-          <h5 class="card-title">{{ offer.subjects[0] }}</h5>
-          <p class="card-text">{{ offer.time }}</p>
+          <h5 class="card-title">{{ offer.title }}</h5>
+          <p class="card-text">{{ offer.subjects[0] }}</p>
+          <p class="card-text">{{ offer.dateFrom }}</p>
+          <p class="card-text">{{ offer.cities[0] }}</p>
+          <p class="card-text">{{ offer.level[0] }}</p>
           <p class="card-text">{{ offer.user }}</p>
           <router-link
             class="nav-link btn btn-primary"
@@ -121,13 +118,13 @@ export default {
     return {
       subjects_: ref(null),
       levels_: ref(null),
-      times_: ref(null),
+      times_: [ref(null), ref(null)],
       ratings_: ref(null),
       cities_: ref(null),
       current: ref(1),
 
       subject: [
-        { label: "Maths", value: "maths" },
+        { label: "Maths", value: "math" },
         { label: "Physics", value: "physics" },
         { label: "Chemistry", value: "chemistry" },
         { label: "English", value: "english" },
@@ -139,10 +136,6 @@ export default {
         { label: "High School", value: "advanced" },
         { label: "University", value: "advanced" },
       ],
-
-      // time: [
-      //   {label: "adkospasdk", value: this.times_.toJSON()},
-      // ],
 
       city: [
         { label: "Wrocław", value: "wroclaw" },
@@ -169,29 +162,49 @@ export default {
     search() { 
       this.offers = [];
       this.dane = [];
+
+      if (this.times_ == null) {
+        this.times_ = [];      
+      }
       
-      let variables = [[this.subjects_, 'subjects='], [this.levels_, 'level='], [this.times_, 'time='],
-        [this.ratings_, 'ratings='], [this.cities_, 'cities='], [this.current, 'page=']];
+      let variables = [
+        [this.subjects_, 'subjects='], 
+        [this.levels_, 'level='], 
+        [this.ratings_, 'ratings='], 
+        [this.times_[0], 'dateFrom='],
+        [this.times_[1], 'dateTo='],
+        [this.cities_, 'cities='], 
+        [this.current, 'page=']];
 
       let link = 'https://panoramx.ift.uni.wroc.pl:8888/v1/posts?';
       let amount = 0;
-
-      console.log(this.times_.value);
-
+      
       variables.forEach(function(variable) {
         if (variable[0] != null) {
-          if (variable[0].value != null) {
-            if (amount >= 1) {
-              link = link + '&';
+          if ((variable[1] == 'dateFrom=') || (variable[1] == 'dateTo=')) {
+            if (!variable[0].hasOwnProperty('_value')){
+              if (variable[0] != null){
+                if (amount >= 1) {
+                  link = link + '&';
+                }
+                link = link + variable[1] + variable[0].toJSON();
+                console.log(link);
+                amount += 1;
+              }
             }
-            link = link + variable[1] + variable[0].value;
-            console.log(link);
-            amount += 1;
+          }
+          else{
+            if (variable[0].value != null){
+              if (amount >= 1) {
+                link = link + '&';
+              }
+              link = link + variable[1] + variable[0].value;
+              console.log(link);
+              amount += 1;
+            }
           }
         }
       });
-
-      // zepuste nie działa na razie !!!!!
 
       fetch(`${link}`,{
           method: "GET",
@@ -207,7 +220,7 @@ export default {
           }
           for (let i = 0; i < data.length; i++) {
             fetch(
-              `https://panoramx.ift.uni.wroc.pl:8888/offer/${this.dane[i]}`,
+              `https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.dane[i]}`,
               {
                 method: "GET",
                 headers: {
@@ -220,7 +233,7 @@ export default {
               .then((offer) => {
                 this.offers.push(offer);
                 fetch(
-                  `https://panoramx.ift.uni.wroc.pl:8888/user/${offer.userId}`,
+                  `https://panoramx.ift.uni.wroc.pl:8888/v1/account/${offer.ownerId}`,
                   {
                     method: "GET",
                     headers: {
@@ -231,7 +244,7 @@ export default {
                 )
                   .then((res) => res.json())
                   .then((user) => {
-                    this.offers[i].user = user.name;
+                    this.offers[i].user = user.firstName;
                   });
               });
           }
@@ -239,11 +252,10 @@ export default {
     },
 
 
-
     pagination() {
       this.offers = [];
       this.dane = [];
-      fetch(`https://panoramx.ift.uni.wroc.pl:8888/offers?p=${this.current}`, {
+      fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/posts?page=${this.current-1}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -257,7 +269,7 @@ export default {
           }
           for (let i = 0; i < data.length; i++) {
             fetch(
-              `https://panoramx.ift.uni.wroc.pl:8888/offer/${this.dane[i]}`,
+              `https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.dane[i]}`,
               {
                 method: "GET",
                 headers: {
@@ -270,7 +282,7 @@ export default {
               .then((offer) => {
                 this.offers.push(offer);
                 fetch(
-                  `https://panoramx.ift.uni.wroc.pl:8888/user/${offer.userId}`,
+                  `https://panoramx.ift.uni.wroc.pl:8888/v1/account/${offer.ownerId}`,
                   {
                     method: "GET",
                     headers: {
@@ -281,7 +293,7 @@ export default {
                 )
                   .then((res) => res.json())
                   .then((user) => {
-                    this.offers[i].user = user.name;
+                    this.offers[i].user = user.firstName;
                   });
               });
           }
@@ -291,8 +303,8 @@ export default {
 
   mounted() {
     this.offers = [];
-      this.dane = [];
-    fetch(`https://panoramx.ift.uni.wroc.pl:8888/offers?p=${this.current}`, {
+    this.dane = [];
+    fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/posts`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -305,7 +317,7 @@ export default {
           this.dane.push(data[i]._id);
         }
         for (let i = 0; i < data.length; i++) {
-          fetch(`https://panoramx.ift.uni.wroc.pl:8888/offer/${this.dane[i]}`, {
+          fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.dane[i]}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -316,7 +328,7 @@ export default {
             .then((offer) => {
               this.offers.push(offer);
               fetch(
-                `https://panoramx.ift.uni.wroc.pl:8888/user/${offer.userId}`,
+                `https://panoramx.ift.uni.wroc.pl:8888/v1/account/${offer.ownerId}`,
                 {
                   method: "GET",
                   headers: {
@@ -327,7 +339,7 @@ export default {
               )
                 .then((res) => res.json())
                 .then((user) => {
-                  this.offers[i].user = user.name;
+                  this.offers[i].user = user.firstName;
                 });
             });
         }

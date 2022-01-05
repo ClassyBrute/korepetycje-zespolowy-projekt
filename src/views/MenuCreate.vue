@@ -26,12 +26,11 @@
           style="width: 250px"
         />
 
-        <!-- data od  -->
-        <Datepicker v-model = 'times_' style="width: 250px; opacity:80%;">
-        </Datepicker>
-
-        <!-- data do  -->
-        <Datepicker v-model = 'times_' style="width: 250px; opacity:80%;">
+        <Datepicker 
+        placeholder="Select Date Range"
+        range
+        v-model = 'times_' 
+        style="width: 400px; opacity:80%;">
         </Datepicker>
 
         <q-select
@@ -98,7 +97,7 @@ export default {
       text_: ref(null),
 
       subject: [
-        { label: "Maths", value: "maths" },
+        { label: "Maths", value: "math" },
         { label: "Physics", value: "physics" },
         { label: "Chemistry", value: "chemistry" },
         { label: "English", value: "english" },
@@ -139,9 +138,10 @@ export default {
         let data = {
           subjects: this.subjects_.value,
           level: this.levels_.value,
-          time: this.times_.toJSON(),
+          dateFrom: this.times_[0].toJSON(),
+          dateTo: this.times_[1].toJSON(),
           cities: this.cities_.value,
-          texts: this.text_.value,
+          title: this.text_,
         };
 
         fetch("https://panoramx.ift.uni.wroc.pl:8888/v1/posts", {
