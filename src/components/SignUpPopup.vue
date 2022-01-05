@@ -102,14 +102,15 @@ export default {
     onSubmit() {
       if (this.accept) {
         let data = {
-          name: this.name,
-          surname: this.surname,
+          accountName: this.email,
+          firstName: this.name,
+          lastName: this.surname,
           email: this.email,
           password: this.password,
-          age: this.age,
+          birthday: this.age,
         };
 
-        fetch("https://panoramx.ift.uni.wroc.pl:8888/register", {
+        fetch("https://panoramx.ift.uni.wroc.pl:8888/v1/accounts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
@@ -121,8 +122,7 @@ export default {
                 return;
               }
               response.json().then((data123) => {
-                document.cookie = "jwt=" + data123.token; // write
-                console.log(document.cookie); // read
+                document.cookie = "jwt=" + data123; // write
                 window.location.replace("/home");
               });
             })

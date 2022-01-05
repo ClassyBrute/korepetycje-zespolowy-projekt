@@ -23,7 +23,10 @@
           style="width: 250px"
         />
 
-        <q-select
+        <Datepicker v-model = 'times_' style="width: 250px; opacity:80%;">
+        </Datepicker>
+
+        <!-- <q-select
           popup-content-class="scroll overflow-hidden"
           multiple
           outlined
@@ -32,7 +35,7 @@
           label="Time"
           hide-dropdown-icon
           style="width: 250px"
-        />
+        /> -->
 
         <q-select
           popup-content-class="scroll overflow-hidden"
@@ -131,18 +134,15 @@ export default {
       ],
 
       level: [
-        { label: "Primary School", value: "primary" },
-        { label: "Middle School", value: "middle" },
-        { label: "High School", value: "high" },
-        { label: "University", value: "uni" },
+        { label: "Primary School", value: "basic" },
+        { label: "Middle School", value: "intermediate" },
+        { label: "High School", value: "advanced" },
+        { label: "University", value: "advanced" },
       ],
 
-      time: [
-        { label: "12:00-13:00", value: "12-13" },
-        { label: "13:00-14:00", value: "13-14" },
-        { label: "14:00-15:00", value: "14-15" },
-        { label: "15:00-16:00", value: "15-16" },
-      ],
+      // time: [
+      //   {label: "adkospasdk", value: this.times_.toJSON()},
+      // ],
 
       city: [
         { label: "Wrocław", value: "wroclaw" },
@@ -171,10 +171,12 @@ export default {
       this.dane = [];
       
       let variables = [[this.subjects_, 'subjects='], [this.levels_, 'level='], [this.times_, 'time='],
-        [this.ratings_, 'ratings='], [this.cities_, 'cities=']];
+        [this.ratings_, 'ratings='], [this.cities_, 'cities='], [this.current, 'page=']];
 
-      let link = 'https://panoramx.ift.uni.wroc.pl:8888/offers?';
+      let link = 'https://panoramx.ift.uni.wroc.pl:8888/v1/posts?';
       let amount = 0;
+
+      console.log(this.times_.value);
 
       variables.forEach(function(variable) {
         if (variable[0] != null) {
@@ -188,6 +190,8 @@ export default {
           }
         }
       });
+
+      // zepuste nie działa na razie !!!!!
 
       fetch(`${link}`,{
           method: "GET",

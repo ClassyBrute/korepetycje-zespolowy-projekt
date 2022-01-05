@@ -140,12 +140,10 @@ export default {
   color: #2c3e50;
   height: 100%;
   width: 100%;
-  background: linear-gradient(
-    0deg,
-    #1a2331 0%,
-    rgba(26, 35, 49, 0.640625) 35.94%,
-    rgba(26, 35, 49, 0) 100%
-  );
+  background-image: url("assets/gradient.png"); 
+  background-position: center;
+  background-repeat: repeat;
+  background-attachment: fixed;
 }
 
 body,
