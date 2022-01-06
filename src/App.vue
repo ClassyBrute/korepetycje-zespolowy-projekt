@@ -27,20 +27,8 @@
           src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg00.deviantart.net%2Fecda%2Fi%2F2015%2F364%2F2%2F4%2Fbreadoge_by_anonimrealpl-d9m1hgh.png&f=1&nofb=1"
         />
       </router-link>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-mdb-toggle="collapse"
-        data-mdb-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <i class="fas fa-bars"></i>
-      </button>
       <div
         @click.self="offSignUp"
-        class="collapse navbar-collapse"
         id="navbarSupportedContent"
       >
         <ul class="navbar-nav ms-auto">
@@ -123,8 +111,10 @@ export default {
       } else false;
     },
     logOut() {
+      // document.cookie = 'jwt=; Max-Age=0; path=/; domain=' + location.hostname + ';expires=Thu, 01 Jan 1970 00:00:01 GMT';
       document.cookie = 'jwt=; Max-Age=0; path=/; domain=' + location.hostname;
-      window.location.replace("/");
+      
+      window.location.replace("sign_in");
     },
   },
 };
