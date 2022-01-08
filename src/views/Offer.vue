@@ -12,8 +12,12 @@
         />
         <div class="card-body" style="width:100%; height:250px "   >
             <h5 class="card-title" >{{ this.offer[0].subjects[0] }}</h5>
-            <p class="card-text">{{ this.offer[0].time }}</p>
-            <p class="card-text">{{ this.offer.user }}</p>
+            <p>{{ this.offer[0].title }}</p>
+            <p>{{ this.offer[0].level[0] }}</p>
+            <p>{{ this.offer[0].cities[0] }}</p>
+            <p>{{ this.offer[0].dateFrom }}</p>
+            <p>{{ this.offer[0].dateTo }}</p>
+            <p>{{ this.offer.user }}</p>
             <a href="#!" class="btn btn-primary">Button</a>
         </div>
     </div>
@@ -40,10 +44,10 @@ export default {
 
   setup() {
     return {
-
+      
     };
   },
-
+  
   data() {
     return {
       offer: [],
@@ -51,8 +55,10 @@ export default {
     };
   },
 
-  beforeMount() {
-    fetch(`https://panoramx.ift.uni.wroc.pl:8888/offer/${this.offer_Id}`, {
+
+  created() {
+    console.log(this.offer_Id);
+    fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.offer_Id}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -60,20 +66,24 @@ export default {
         },
     })
     .then((res) => res.json())
-    .then((offer) => {
-        this.offer.push(offer);
-        fetch(`https://panoramx.ift.uni.wroc.pl:8888/user/${offer.userId}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + readCookie("jwt"),
-            },
+    .then((offers) => {
+        this.offer.push(offers);
+        
+         fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/account/${offers.ownerId}`, {
+             method: "GET",
+             headers: {
+                 "Content-Type": "application/json",
+                 Authorization: "Bearer " + readCookie("jwt"),
+             },
+         })
+         .then((res) => res.json())
+         .then((user) => {
+             this.offer.user = user.firstName;
+             
+         });
         })
-        .then((res) => res.json())
-        .then((user) => {
-            this.offer.user = user.name;
-        });
-        });
+        
+        // console.log(this.offer[0]);
     }
 };
 </script>

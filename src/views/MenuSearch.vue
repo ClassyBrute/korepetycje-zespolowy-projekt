@@ -70,12 +70,12 @@
           alt="..."
         />
         <div class="card-body">
-          <h5 class="card-title">{{ offer.title }}</h5>
+          <!-- <h5 class="card-title">{{ offer.title }}</h5> -->
           <p class="card-text">{{ offer.subjects[0] }}</p>
           <p class="card-text">{{ offer.dateFrom }}</p>
           <p class="card-text">{{ offer.cities[0] }}</p>
           <p class="card-text">{{ offer.level[0] }}</p>
-          <p class="card-text">{{ offer.user }}</p>
+          <!-- <p class="card-text">{{ offer.user }}</p> -->
           <router-link
             class="nav-link btn btn-primary"
             :to="{ name: 'Offer', params: { offerId: offer._id } }"
@@ -297,7 +297,8 @@ export default {
                   });
               });
           }
-        });
+        })
+        
     },
   },
 
@@ -343,7 +344,8 @@ export default {
                 });
             });
         }
-      });
+      })
+      
   },
 };
 </script>

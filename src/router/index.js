@@ -9,7 +9,7 @@ import Profile from '../views/Profile.vue'
 import Settings from '../views/Settings.vue'
 import FrontPage from '../views/FrontPage.vue'
 import Offer from '../views/Offer.vue'
-
+import Api from '../views/Api.vue'
 
 const routes = [
   {
@@ -58,6 +58,12 @@ const routes = [
     component: Offer,
     props: true
   },
+  {
+    path: '/api',
+    name: 'Api',
+    component: Api,
+  },
+  
 
   //catch all 404
   {

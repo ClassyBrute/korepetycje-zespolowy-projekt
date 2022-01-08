@@ -58,6 +58,8 @@
         />
       </div>
     </div>
+    
+
     <q-btn
       @click="submit"
       id="buttonSubmit"
@@ -65,8 +67,14 @@
       color="primary"
       label="Create"
       size="lg"
-    />
+    >
+ 
+    </q-btn>
+    
   </div>
+  <!-- <router-link class="nav-link btn btn-primary" @click="submit" :to="{ name: 'Offer', params: { offerId: this.dane } }">Button</router-link> -->
+
+  
 </template>
 
 
@@ -74,6 +82,7 @@
 import Datepicker from 'vue3-date-time-picker';
 import 'vue3-date-time-picker/dist/main.css'
 import { ref } from "vue";
+
 
 function readCookie(name) {
   var nameEQ = name + "=";
@@ -85,9 +94,11 @@ function readCookie(name) {
   }
   return null;
 }
-
 export default {
   components: { Datepicker },
+
+
+
   setup() {
     return {
       subjects_: ref(null),
@@ -105,7 +116,7 @@ export default {
 
       level: [
         { label: "Primary School", value: "basic" },
-        { label: "Middle School", value: "intermidiate" },
+        { label: "Middle School", value: "intermediate" },
         { label: "High School", value: "advanced" },
         { label: "University", value: "advanced" },
       ],
@@ -151,19 +162,21 @@ export default {
             Authorization: "Bearer " + readCookie("jwt"),
           },
           body: JSON.stringify(data),
-        }).then((response) => {
-          if (response.status == 400) {
-            alert("Try again");
-            return;
-          }
-          if (response.status == 200) {
-            // response.json().then((data123) => {
-            console.log(response);
-            // window.location.replace("/offer")
-            // i jeszcze jako params wyslac offer._id
-            // });
-          }
-        });
+        })
+         .then((response) => {
+           if (response.status == 400) {
+             alert("Try again");
+             return;
+           }
+           if (response.status == 200)  {
+             response.json().then((data123) => {
+               this.$router.push({name: 'Offer', params: { offerId: data123 }});
+             });
+
+           }
+         });
+         
+        
       }
     },
   },
