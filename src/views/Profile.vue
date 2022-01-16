@@ -15,7 +15,7 @@
                 <div class="mt-3">
                   <h4>{{ name }}</h4>
                   <p class="text-secondary mb-1">Pełno prawny korepetytor</p>
-                  <p class="text-muted font-size-sm">Wrocław, śródmieście</p>
+                  <p class="text-muted font-size-sm"> {{ cities }}</p>
                   <button class="btn btn-primary">Message</button>
                 </div>
               </div>
@@ -29,8 +29,13 @@
                 <div class="col-sm-3">
                   <h6 class="mb-0">Name</h6>
                 </div>
-                <div class="col-sm-9 text-secondary">
+                <div v-if="!edit" class="col-sm-9 text-secondary">
                   {{ name }}
+                </div>
+                <div v-if="edit" class="col-sm-9 text-secondary">
+                  <form>
+                    <input type="text" v-model="this.name" placeholder="Name">
+                  </form>
                 </div>
               </div>
               <hr />
@@ -38,8 +43,13 @@
                 <div class="col-sm-3">
                   <h6 class="mb-0">Surname</h6>
                 </div>
-                <div class="col-sm-9 text-secondary">
+                <div v-if="!edit" class="col-sm-9 text-secondary">
                   {{ surname }}
+                </div>
+                <div v-if="edit" class="col-sm-9 text-secondary">
+                  <form>
+                    <input type="text" v-model="this.surname" placeholder="Surname">
+                  </form>
                 </div>
               </div>
               <hr />
@@ -56,15 +66,27 @@
                 <div class="col-sm-3">
                   <h6 class="mb-0">Phone</h6>
                 </div>
-                <div class="col-sm-9 text-secondary">your phone number</div>
+                <div v-if="!edit" class="col-sm-9 text-secondary">
+                  {{ phone }}
+                </div>
+                <div v-if="edit" class="col-sm-9 text-secondary">
+                  <form>
+                    <input type="text" v-model="this.phone" placeholder="Phone number">
+                  </form>
+                </div>
               </div>
               <hr />
               <div class="row">
                 <div class="col-sm-3">
                   <h6 class="mb-0">Birth year</h6>
                 </div>
-                <div class="col-sm-9 text-secondary">
+                <div v-if="!edit" class="col-sm-9 text-secondary">
                   {{ age }}
+                </div>
+                <div v-if="edit" class="col-sm-9 text-secondary">
+                  <form>
+                    <input type="text" v-model="this.age" placeholder="1999-01-01">
+                  </form>
                 </div>
               </div>
               <hr />
@@ -72,12 +94,27 @@
                 <div class="col-sm-3">
                   <h6 class="mb-0">Address</h6>
                 </div>
-                <div class="col-sm-9 text-secondary">Wrocław</div>
+                <div v-if="!edit" class="col-sm-9 text-secondary">
+                  {{ cities }}
+                </div>
+                <div v-if="edit" class="col-sm-9 text-secondary">
+                  <form>
+                    <input type="text" v-model="this.cities" placeholder="City">
+                  </form>
+                </div>
               </div>
               <hr />
               <div class="row">
                 <div class="col-sm-12">
-                  <a class="btn btn-info" target="__blank" href="">Edit</a>
+                  <button v-if="!edit" class="btn btn-primary" @click="edit_click" >
+                    Edit
+                  </button>
+                  <button v-if="edit" class="btn btn-primary" @click="save_click" >
+                    Save
+                  </button>
+                  <button v-if="edit" class="btn btn-primary" @click="cancel_click" >
+                    Cancel
+                  </button>
                 </div>
               </div>
             </div>
@@ -107,6 +144,17 @@ export default {
       surname: "",
       email: "",
       age: "",
+      phone: "",
+      cities: "",
+
+      edit: false,
+
+      name_old: "",
+      surname_old: "",
+      email_old: "",
+      age_old: "",
+      phone_old: "",
+      cities_old: "",
     };
   },
 
@@ -123,9 +171,75 @@ export default {
         this.name = data.firstName;
         this.surname = data.lastName;
         this.email = data.email;
-        this.age = data.birthday;
+        this.age = data.birthday.slice(0, 10);
+        this.cities = data.cities;
+
+        this.name_old = data.firstName;
+        this.surname_old = data.lastName;
+        this.email_old = data.email;
+        this.age_old = data.birthday.slice(0, 10);
+        this.cities_old = data.cities;
+        this.phone_old = data.phone; 
       });
   },
+
+  methods: {
+    edit_click() {
+      this.edit = !this.edit;
+    },
+
+    save_click() {
+
+      // fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/profile`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: "Bearer " + readCookie("jwt"),
+      //   },
+      // })
+      //   .then((res) => res.json())
+      //   .then((data) => {
+      //     this.name = data.firstName;
+      //     this.surname = data.lastName;
+      //     this.email = data.email;
+      //     this.age = data.birthday;
+      //     this.cities = data.cities;
+
+
+      // let editData = {
+      //   subjects: this.subjects_.value,
+      //   level: this.levels_.value,
+      //   dateFrom: this.times_[0].toJSON(),
+      //   dateTo: this.times_[1].toJSON(),
+      //   cities: this.cities_.value,
+      //   title: this.text_,
+      // };
+
+      //     fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.offer_Id}`, {
+      //     method: "PUT",
+      //     headers: {
+      //         "Content-Type": "application/json",
+      //         Authorization: "Bearer " + readCookie("jwt"),
+      //         body: JSON.stringify(editData),
+      //     },
+      // })
+
+
+      this.edit = !this.edit;
+    },
+
+    cancel_click() {
+      this.name = this.name_old;
+      this.surname = this.surname_old;
+      this.email = this.email_old;
+      this.age = this.age_old;
+      this.cities = this.cities_old;
+      this.phone = this.phone_old;
+
+      this.edit = !this.edit;
+    }
+  },
+
 };
 </script>
 

@@ -38,11 +38,6 @@
             >
           </li>
           <li @click="offSignUp" class="nav-item" v-if="loggedInCheck()">
-            <router-link class="nav-link" :to="{ name: 'Settings' }"
-              >Settings</router-link
-            >
-          </li>
-          <li @click="offSignUp" class="nav-item" v-if="loggedInCheck()">
             <router-link class="nav-link" :to="{ name: 'About' }"
               >About</router-link
             >
@@ -134,6 +129,7 @@ export default {
   background-position: center;
   background-repeat: repeat;
   background-attachment: fixed;
+  overflow: scroll;
 }
 
 body,
