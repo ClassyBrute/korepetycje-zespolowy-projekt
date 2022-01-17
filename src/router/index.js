@@ -45,7 +45,8 @@ const routes = [
   {
     path: '/profile',
     name: 'Profile',
-    component: Profile
+    component: Profile,
+    props: true
   },
   {
     path: '/settings',

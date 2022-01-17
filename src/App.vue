@@ -32,8 +32,8 @@
         id="navbarSupportedContent"
       >
         <ul class="navbar-nav ms-auto">
-          <li @click="offSignUp" class="nav-item" v-if="loggedInCheck()">
-            <router-link class="nav-link" :to="{ name: 'Profile' }"
+          <li @click="offSignUp(); forceRender();" class="nav-item" v-if="loggedInCheck()">
+            <router-link class="nav-link" :to="{ name: 'Profile', params: { accountId: loggedId} }"
               >Profile</router-link
             >
           </li>
@@ -61,7 +61,7 @@
   <br />
   <br />
 
-  <router-view @click="offSignUp" />
+  <router-view :key="componentKey" @click="offSignUp" />
 
   <div v-if="showSignUp">
     <SignUpPopup theme="sale" @close="offSignUp"> </SignUpPopup>
@@ -79,6 +79,17 @@
 </template>
 
 <script>
+function readCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(";");
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == " ") c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
 import SignUpPopup from "./components/SignUpPopup";
 
 export default {
@@ -88,9 +99,31 @@ export default {
     return {
       showSignUp: false,
       loggedIn: false,
+      loggedId: "",
+      componentKey: 0,
     };
   },
+
+  mounted() {
+    fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/profile`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + readCookie("jwt"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        this.loggedId = data._id;
+      });
+  },
+
+
   methods: {
+    forceRender() {
+      this.componentKey += 1;
+    },
+
     toggleSignUp() {
       this.showSignUp = !this.showSignUp;
     },
@@ -106,9 +139,7 @@ export default {
       } else false;
     },
     logOut() {
-      // document.cookie = 'jwt=; Max-Age=0; path=/; domain=' + location.hostname + ';expires=Thu, 01 Jan 1970 00:00:01 GMT';
       document.cookie = 'jwt=; Max-Age=0; path=/; domain=' + location.hostname;
-      
       window.location.replace("sign_in");
     },
   },

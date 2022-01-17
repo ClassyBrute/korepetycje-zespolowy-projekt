@@ -57,7 +57,11 @@
           </form>
         </div>
 
-        <p>{{ this.offer.user }}</p>
+        <p>
+          <router-link class="nav-link" :to="{ name: 'Profile', params: { accountId: this.offer[0].ownerId}}">
+            {{ this.offer.user }}
+          </router-link>
+        </p>
 
         <button
           id="buttonID"
@@ -66,6 +70,15 @@
           class="btn btn-primary"
         >
           Edit
+        </button>
+
+        <button
+          id="buttonRES"
+          @click="reservation"
+          v-if="!checkLogged"
+          class="btn btn-primary"
+        >
+          Reserve
         </button>
 
         <button @click="saveEdit" v-if="showEdit" class="btn btn-primary">
@@ -148,14 +161,18 @@ export default {
       .then((res) => res.json())
       .then((data) => {
         this.loggedId = data._id;
+
+        if (this.loggedId == this.offer[0].ownerId) {
+          this.checkLogged = true;
+        }
       });
   },
 
-  beforeUpdate() {
-    if (this.loggedId == this.offer[0].ownerId) {
-      this.checkLogged = true;
-    }
-  },
+  // beforeUpdate() {
+  //   if (this.loggedId == this.offer[0].ownerId) {
+  //     this.checkLogged = true;
+  //   }
+  // },
 
   methods: {
     startEdit() {
@@ -193,11 +210,36 @@ export default {
         }
       });
     },
-// dorobić zamienianie na stare wartości :)
+    // dorobić zamienianie na stare wartości :)
     cancel() {
       this.showEdit = !this.showEdit;
       let myClock = document.getElementById("buttonID");
       myClock.style.display = "inline";
+    },
+
+    reservation() {
+      fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/reservation/${this.offer_Id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + readCookie("jwt"),
+        },
+      }).then((response) => {
+        if (response.status == 400) {
+          alert("Bad request");
+        }
+        if (response.status == 404) {
+          alert("Not found");
+        }
+        if (response.status == 409) {
+          alert("Someone already registered");
+        }
+        if (response.status == 200) {
+          console.log("sukces");
+        }
+      });
+
+
     },
   },
 };

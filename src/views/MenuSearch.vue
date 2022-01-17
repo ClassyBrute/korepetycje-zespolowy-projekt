@@ -80,7 +80,7 @@
           <router-link
             class="nav-link btn btn-primary"
             :to="{ name: 'Offer', params: { offerId: offer._id } }"
-            >Button</router-link
+            >Details</router-link
           >
         </div>
       </div>

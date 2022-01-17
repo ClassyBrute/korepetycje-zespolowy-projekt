@@ -103,8 +103,19 @@
                   </form>
                 </div>
               </div>
+              <hr v-if="edit"  />
+              <div v-if="edit" class="row">
+                <div class="col-sm-3">
+                  <h6 class="mb-0">Password</h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                  <form>
+                    <input type="password" v-model="this.password" placeholder="Please enter new password">
+                  </form>
+                </div>
+              </div>
               <hr />
-              <div class="row">
+              <div v-if="owner" class="row">
                 <div class="col-sm-12">
                   <button v-if="!edit" class="btn btn-primary" @click="edit_click" >
                     Edit
@@ -138,6 +149,8 @@ function readCookie(name) {
 }
 
 export default {
+  props: ["accountId"],
+
   data() {
     return {
       name: "",
@@ -146,8 +159,11 @@ export default {
       age: "",
       phone: "",
       cities: "",
+      password: "",
 
       edit: false,
+      owner: false,
+      loggedId: "",
 
       name_old: "",
       surname_old: "",
@@ -159,7 +175,7 @@ export default {
   },
 
   mounted() {
-    fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/profile`, {
+    fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/account/${this.accountId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -173,6 +189,7 @@ export default {
         this.email = data.email;
         this.age = data.birthday.slice(0, 10);
         this.cities = data.cities;
+        this.phone = data.phoneNumber;
 
         this.name_old = data.firstName;
         this.surname_old = data.lastName;
@@ -180,6 +197,22 @@ export default {
         this.age_old = data.birthday.slice(0, 10);
         this.cities_old = data.cities;
         this.phone_old = data.phone; 
+      });
+
+    fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/profile`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + readCookie("jwt"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        this.loggedId = data._id;
+        
+        if (this.loggedId == this.accountId) {
+          this.owner = true;
+        }
       });
   },
 
@@ -189,41 +222,41 @@ export default {
     },
 
     save_click() {
+      let editData = {
+        password: this.password,
+        email: this.email,
+        firstName: this.name,
+        lastName: this.surname,
+        address: this.cities,
+        // about: this.about,
+        phoneNumber: this.phone,
+        // birthday: this.birthday.toJSON(),
+      };
 
-      // fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/profile`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: "Bearer " + readCookie("jwt"),
-      //   },
-      // })
-      //   .then((res) => res.json())
-      //   .then((data) => {
-      //     this.name = data.firstName;
-      //     this.surname = data.lastName;
-      //     this.email = data.email;
-      //     this.age = data.birthday;
-      //     this.cities = data.cities;
+      if (editData.password == "") {
+        delete editData.password;
+      }
 
-
-      // let editData = {
-      //   subjects: this.subjects_.value,
-      //   level: this.levels_.value,
-      //   dateFrom: this.times_[0].toJSON(),
-      //   dateTo: this.times_[1].toJSON(),
-      //   cities: this.cities_.value,
-      //   title: this.text_,
-      // };
-
-      //     fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.offer_Id}`, {
-      //     method: "PUT",
-      //     headers: {
-      //         "Content-Type": "application/json",
-      //         Authorization: "Bearer " + readCookie("jwt"),
-      //         body: JSON.stringify(editData),
-      //     },
-      // })
-
+      fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/profile`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + readCookie("jwt"),
+        },
+        body: JSON.stringify(editData),
+      }).then((response) => {
+        if (response.status == 400) {
+          this.cancel_click();
+          alert("Enter valid data");
+        }
+        if (response.status == 401) {
+          this.cancel_click();
+          alert("Unauthorized 401");
+        }
+        if (response.status == 200) {
+          console.log("sukces");
+        }
+      });
 
       this.edit = !this.edit;
     },
