@@ -200,8 +200,8 @@ export default {
       phone_old: "",
       cities_old: "",
 
-      offers: [],
       dane: [],
+      offers: [],
     };
   },
 
