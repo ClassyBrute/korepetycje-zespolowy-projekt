@@ -49,19 +49,11 @@
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
 
-        <q-input
-          filled
-          no-error-icon
-          type="number"
-          v-model="age"
-          label="Year of birth *"
-          hint="Year of birth"
-          lazy-rules
-          :rules="[
-            (val) => (val !== null && val !== '') || 'Please type your age',
-            (val) => (val > 1920 && val < 2021) || 'Please type a real age',
-          ]"
-        />
+        <Datepicker 
+          placeholder="Your birthday"
+          v-model = 'age' 
+          style="width: 350px; opacity:80%;">
+        </Datepicker>
 
         <q-toggle v-model="accept" label="I accept the license and terms" />
 

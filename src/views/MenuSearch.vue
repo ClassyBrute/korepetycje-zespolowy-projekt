@@ -64,7 +64,8 @@
     <q-btn
       id="buttonSubmit"
       class="item-center"
-      color="primary"
+      color="black"
+      text-color="orange"
       label="Search"
       @click="search"
       size="lg"
@@ -73,13 +74,8 @@
   <div class="q-pa-md">
     <div class="row col-8 inline">
       <div v-for="offer in offers" :key="offer" class="card mb-3 pt-1 bg-dark text-white" id="box2">
-        <img
-          src="https://mdbootstrap.com/img/new/standard/nature/184.jpg"
-          class="card-img-top"
-          alt="..."
-        />
         <div class="card-body">
-          <h5 class="card-title" style="line-height: 1.5em; height: 3em; overflow: hidden"  >{{ offer.title }}</h5>
+          <h5 class="card-title text-orange" style="line-height: 1.5em; height: 3em; overflow: hidden;"  >{{ offer.title }}</h5>
           <p class="card-text">{{ offer.subjects[0] }}</p>
           <p class="card-text">{{ "Since " + offer.dateFrom.slice(0, 10) + " " + offer.dateFrom.slice(11, 16) }}</p>
           <p class="card-text">{{ "Until " + offer.dateTo.slice(0, 10) + " " + offer.dateTo.slice(11, 16) }}</p>
@@ -87,7 +83,7 @@
           <!-- <p class="card-text">{{ offer.level[0] }}</p> -->
           <!-- <p class="card-text">{{ offer.user }}</p> -->
           <router-link
-            class="nav-link btn btn-primary"
+            class="nav-link btn btn-primary bg-black text-orange"
             :to="{ name: 'Offer', params: { offerId: offer._id } }"
             >Details</router-link
           >
@@ -370,7 +366,7 @@ export default {
 #box2 {
   left: 10px;
   width: 200px;
-  height: 405px;
+  height: 300px;
   margin-right: 20px;
 }
 

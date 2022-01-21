@@ -3,7 +3,7 @@
     <div class="main-body">
       <div class="row gutters-sm">
         <div class="col-md-4 mb-3">
-          <div class="card" style="background: black;">
+          <div class="card bg-dark">
             <div class="card-body">
               <div class="d-flex flex-column align-items-center text-center">
                 <img
@@ -23,7 +23,7 @@
           </div>
         </div>
         <div class="col-md-7">
-          <div class="text-white card mb-3" style="background: black;">
+          <div class="text-white card mb-3 bg-dark">
             <div class="card-body">
               <div class="row">
                 <div class="col-sm-3">
@@ -78,15 +78,17 @@
               <hr />
               <div class="row">
                 <div class="col-sm-3">
-                  <h6 class="mb-0">Birth year</h6>
+                  <h6 class="mb-0">Birthday</h6>
                 </div>
                 <div v-if="!edit" class="col-sm-9">
                   {{ age }}
                 </div>
-                <div v-if="edit" class="col-sm-9">
-                  <form>
-                    <input type="text" v-model="this.age" placeholder="1999-01-01">
-                  </form>
+                <div v-if="edit" class="col-sm-9" style="padding-left: 182px;">
+                  <Datepicker 
+                    placeholder="Your birthday"
+                    v-model = 'age' 
+                    style="width: 200px; opacity:80%;">
+                  </Datepicker>
                 </div>
               </div>
               <hr />
@@ -134,6 +136,32 @@
       </div>
     </div>
   </div>
+
+  <div class="q-pa-md">
+    <div class="row col-8 inline">
+      <div v-for="offer in offers" :key="offer" class="card mb-3 pt-1 bg-dark text-white" id="box2">
+        <div class="card-body">
+          <h5 style="line-height: 1.5em; height: 3em; overflow: hidden" class="card-title">{{ offer.title }}</h5>
+          <p class="card-text">{{ offer.subjects[0] }}</p>
+          <p class="card-text">{{ "Since " + offer.dateFrom.slice(0, 10) + " " + offer.dateFrom.slice(11, 16) }}</p>
+          <p class="card-text">{{ "Until " + offer.dateTo.slice(0, 10) + " " + offer.dateTo.slice(11, 16) }}</p>
+          <p class="card-text">{{ offer.cities[0] }}</p>
+          <!-- <p class="card-text">{{ offer.level[0] }}</p> -->
+          <!-- <p class="card-text">{{ offer.user }}</p> -->
+          <router-link
+            class="nav-link btn btn-primary"
+            :to="{ name: 'Offer', params: { offerId: offer._id } }"
+            >Details</router-link
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+  <br>
+  <br>
+  <br>
 </template>
 
 <script>
@@ -171,6 +199,9 @@ export default {
       age_old: "",
       phone_old: "",
       cities_old: "",
+
+      offers: [],
+      dane: [],
     };
   },
 
@@ -214,6 +245,50 @@ export default {
           this.owner = true;
         }
       });
+
+
+    this.offers = [];
+    this.dane = [];
+    fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/posts?ownerId=${this.accountId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + readCookie("jwt"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        for (let i = 0; i < data.length; i++) {
+          this.dane.push(data[i]._id);
+        }
+        for (let i = 0; i < data.length; i++) {
+          fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.dane[i]}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + readCookie("jwt"),
+            },
+          })
+            .then((res) => res.json())
+            .then((offer) => {
+              this.offers.push(offer);
+              fetch(
+                `https://panoramx.ift.uni.wroc.pl:8888/v1/account/${offer.ownerId}`,
+                {
+                  method: "GET",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + readCookie("jwt"),
+                  },
+                }
+              )
+                .then((res) => res.json())
+                .then((user) => {
+                  this.offers[i].user = user.firstName;
+                });
+            });
+        }
+      })
   },
 
   methods: {
@@ -230,12 +305,17 @@ export default {
         address: this.cities,
         // about: this.about,
         phoneNumber: this.phone,
-        // birthday: this.birthday.toJSON(),
+        birthday: this.age,
       };
+      
+      console.log(this.password);
 
       if (editData.password == "") {
         delete editData.password;
       }
+
+      console.log(this.password);
+
 
       fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/profile`, {
         method: "PUT",
@@ -257,6 +337,8 @@ export default {
           console.log("sukces");
         }
       });
+
+      this.age = JSON.stringify(this.age).slice(1, 11);
 
       this.edit = !this.edit;
     },

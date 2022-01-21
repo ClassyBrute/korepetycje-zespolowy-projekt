@@ -1,97 +1,173 @@
 <template>
   <div class="center">
     <div class="property-card">
-      <a href="#">
-        <div class="property-image">
-          <div class="property-image-title">
-            <!-- Optional <h5>Card Title</h5> If you want it, turn on the CSS also. -->
+      <div class="property-description bg-dark text-white">
+        <div class="row gutters-sm">
+          <div class="col-ms-5">
+            <div class="text-white card mb-3 bg-dark">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="mb-0">Subject</h5>
+                  </div>
+                  <div v-if="!showEdit" class="col-sm-9">
+                    {{ this.offer[0].subjects[0] }}
+                  </div>
+                  <div v-if="showEdit" class="col-sm-9">
+                    <form>
+                      <input
+                        type="text"
+                        v-model="this.offer[0].subjects[0]"
+                        placeholder="Name"
+                      />
+                    </form>
+                  </div>
+                </div>
+                <hr />
+
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="mb-0">Title</h5>
+                  </div>
+                  <div v-if="!showEdit" class="col-sm-9">
+                    {{ this.offer[0].title }}
+                  </div>
+                  <div v-if="showEdit" class="col-sm-9">
+                    <form>
+                      <input
+                        type="text"
+                        v-model="this.offer[0].title"
+                        placeholder="Name"
+                      />
+                    </form>
+                  </div>
+                </div>
+                <hr />
+
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="mb-0">Level</h5>
+                  </div>
+                  <div v-if="!showEdit" class="col-sm-9">
+                    {{ this.offer[0].level[0] }}
+                  </div>
+                  <div v-if="showEdit" class="col-sm-9">
+                    <form>
+                      <input
+                        type="text"
+                        v-model="this.offer[0].level[0]"
+                        placeholder="Name"
+                      />
+                    </form>
+                  </div>
+                </div>
+                <hr />
+
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="mb-0">Cities</h5>
+                  </div>
+                  <div v-if="!showEdit" class="col-sm-9">
+                    {{ this.offer[0].cities[0] }}
+                  </div>
+                  <div v-if="showEdit" class="col-sm-9">
+                    <form>
+                      <input
+                        type="text"
+                        v-model="this.offer[0].cities[0]"
+                        placeholder="Name"
+                      />
+                    </form>
+                  </div>
+                </div>
+                <hr />
+
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="mb-0">Date</h5>
+                  </div>
+                  <div v-if="!showEdit" class="col-sm-9">
+                    {{
+                      this.offer[0].dateFrom.slice(0, 10) +
+                      " - " +
+                      this.offer[0].dateTo.slice(0, 10)
+                    }}
+                  </div>
+                  <div
+                    v-if="showEdit"
+                    class="col-sm-9"
+                    style="padding-left: 188px"
+                  >
+                    <Datepicker
+                      placeholder="Select Date Range"
+                      range
+                      v-model="times_"
+                      style="width: 200px; opacity: 80%"
+                    >
+                    </Datepicker>
+                  </div>
+                </div>
+                <hr />
+
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="mb-0">Owner</h5>
+                  </div>
+                  <div class="col-sm-9">
+                    <router-link
+                      class="nav-link"
+                      :to="{
+                        name: 'Profile',
+                        params: { accountId: this.offer[0].ownerId },
+                      }"
+                    >
+                      {{ this.offer.user }}
+                    </router-link>
+                  </div>
+                </div>
+                <hr />
+
+                <div v-if="checkLogged" class="row">
+                  <div class="col-sm-12">
+                    <button
+                      v-if="!showEdit"
+                      class="btn btn-primary"
+                      @click="startEdit"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      v-if="showEdit"
+                      class="btn btn-primary"
+                      @click="saveEdit"
+                    >
+                      Save
+                    </button>
+                    <button
+                      v-if="showEdit"
+                      class="btn btn-primary"
+                      @click="cancel"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+
+                <div v-if="!checkLogged" class="row">
+                  <div class="col-sm-12">
+                    <button class="btn btn-primary" @click="reservation">
+                      Reserve
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div></a
-      >
-      <div class="property-description">
-        <h5 v-if="!showEdit">{{ this.offer[0].subjects[0] }}</h5>
-
-        <div v-if="showEdit">
-          <form>
-            <input type="text" v-model="this.offer[0].subjects[0]" />
-          </form>
         </div>
-
-        <p v-if="!showEdit">{{ this.offer[0].title }}</p>
-
-        <div v-if="showEdit">
-          <form>
-            <input type="text" v-model="this.offer[0].title" />
-          </form>
-        </div>
-
-        <p v-if="!showEdit">{{ this.offer[0].level[0] }}</p>
-
-        <div v-if="showEdit">
-          <form>
-            <input type="text" v-model="this.offer[0].level[0]" />
-          </form>
-        </div>
-
-        <p v-if="!showEdit">{{ this.offer[0].cities[0] }}</p>
-
-        <div v-if="showEdit">
-          <form>
-            <input type="text" v-model="this.offer[0].cities[0]" />
-          </form>
-        </div>
-
-        <p v-if="!showEdit">{{ this.offer[0].dateFrom }}</p>
-
-        <div v-if="showEdit">
-          <form>
-            <input type="text" v-model="this.offer[0].dateFrom" />
-          </form>
-        </div>
-
-        <p v-if="!showEdit">{{ this.offer[0].dateTo }}</p>
-
-        <div v-if="showEdit">
-          <form>
-            <input type="text" v-model="this.offer[0].dateTo" />
-          </form>
-        </div>
-
-        <p>
-          <router-link class="nav-link" :to="{ name: 'Profile', params: { accountId: this.offer[0].ownerId}}">
-            {{ this.offer.user }}
-          </router-link>
-        </p>
-
-        <button
-          id="buttonID"
-          @click="startEdit"
-          v-if="checkLogged"
-          class="btn btn-primary"
-        >
-          Edit
-        </button>
-
-        <button
-          id="buttonRES"
-          @click="reservation"
-          v-if="!checkLogged"
-          class="btn btn-primary"
-        >
-          Reserve
-        </button>
-
-        <button @click="saveEdit" v-if="showEdit" class="btn btn-primary">
-          Save
-        </button>
-        <button @click="cancel" v-if="showEdit" class="btn btn-primary">
-          Cancel
-        </button>
       </div>
     </div>
   </div>
 </template>
-
 
 <script>
 function readCookie(name) {
@@ -117,39 +193,16 @@ export default {
       showEdit: false,
       checkLogged: false,
       offer: [],
+      offer_old: [],
       offer_Id: this.offerId,
       loggedId: "",
+
+      // dateFrom: this.offer[0].dateFrom.toJSON(),
+      // dateTo: this.offer[0].dateTo.toJSON() ,
     };
   },
 
-  created() {
-    fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.offer_Id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + readCookie("jwt"),
-      },
-    })
-      .then((res) => res.json())
-      .then((offers) => {
-        this.offer.push(offers);
-
-        fetch(
-          `https://panoramx.ift.uni.wroc.pl:8888/v1/account/${offers.ownerId}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + readCookie("jwt"),
-            },
-          }
-        )
-          .then((res) => res.json())
-          .then((user) => {
-            this.offer.user = user.firstName;
-          });
-      });
-
+  mounted() {
     //zapisywanie id zalogowanego id
     fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/profile`, {
       method: "GET",
@@ -168,17 +221,39 @@ export default {
       });
   },
 
-  // beforeUpdate() {
-  //   if (this.loggedId == this.offer[0].ownerId) {
-  //     this.checkLogged = true;
-  //   }
-  // },
+  created() {
+    fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.offer_Id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + readCookie("jwt"),
+      },
+    })
+      .then((res) => res.json())
+      .then((offers) => {
+        this.offer.push(offers);
+        this.offer_old.push(offers);
+
+        fetch(
+          `https://panoramx.ift.uni.wroc.pl:8888/v1/account/${offers.ownerId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + readCookie("jwt"),
+            },
+          }
+        )
+          .then((res) => res.json())
+          .then((user) => {
+            this.offer.user = user.firstName;
+          });
+      });
+  },
 
   methods: {
     startEdit() {
       this.showEdit = !this.showEdit;
-      let myClock = document.getElementById("buttonID");
-      myClock.style.display = "none";
     },
 
     saveEdit() {
@@ -212,19 +287,25 @@ export default {
     },
     // dorobić zamienianie na stare wartości :)
     cancel() {
+
+      // this.offer_old.map(obj => this.offer);
+      // console.log(this.offer);
+
       this.showEdit = !this.showEdit;
-      let myClock = document.getElementById("buttonID");
-      myClock.style.display = "inline";
+
     },
 
     reservation() {
-      fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/reservation/${this.offer_Id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + readCookie("jwt"),
-        },
-      }).then((response) => {
+      fetch(
+        `https://panoramx.ift.uni.wroc.pl:8888/v1/reservation/${this.offer_Id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + readCookie("jwt"),
+          },
+        }
+      ).then((response) => {
         if (response.status == 400) {
           alert("Bad request");
         }
@@ -238,8 +319,6 @@ export default {
           console.log("sukces");
         }
       });
-
-
     },
   },
 };
@@ -276,10 +355,8 @@ p {
   align-items: center;
 }
 
-/* End Non-Essential  */
-
 .property-card {
-  height: 39em;
+  height: 37em;
   width: 55em;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -298,23 +375,9 @@ p {
   box-shadow: 15px 15px 27px #34495e, -15px -15px 27px #34495e;
 }
 
-.property-image {
-  height: 15em;
-  width: 55em;
-  padding: 1em 2em;
-  position: Absolute;
-  top: 0px;
-  -webkit-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-  -o-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-  transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-  background-image: url("https://cdn.photographylife.com/wp-content/uploads/2017/01/What-is-landscape-photography.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
 .property-description {
   background-color: #fafafc;
-  height: 24em;
+  height: 40em;
   width: 55em;
   position: absolute;
   bottom: 0em;
