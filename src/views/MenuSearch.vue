@@ -1,5 +1,5 @@
 <template>
-  <div id="selectBox" class="item-center">
+  <div id="selectBox" class="item-center text-white">
     <div class="q-px-md" style="margin-top: 100px">
       <h2>Search for what you desire!</h2>
       <div class="q-gutter-md row justify-center" style="margin-top: 40px">
@@ -9,6 +9,8 @@
           v-model="subjects_"
           :options="subject"
           label="Subject"
+          label-color="white"
+          dark
           hide-dropdown-icon
           style="width: 250px"
         />
@@ -19,8 +21,10 @@
           v-model="levels_"
           :options="level"
           label="Level"
+          label-color="white"
+          dark
           hide-dropdown-icon
-          style="width: 250px"
+          style="width: 250px;"
         />
 
         <q-select
@@ -29,6 +33,8 @@
           v-model="ratings_"
           :options="rating"
           label="Rating"
+          label-color="white"
+          dark
           hide-dropdown-icon
           style="width: 250px"
         />
@@ -39,6 +45,8 @@
           v-model="cities_"
           :options="city"
           label="City"
+          label-color="white"
+          dark
           hide-dropdown-icon
           style="width: 250px"
         />
@@ -46,6 +54,7 @@
         <Datepicker 
         placeholder="Select Date Range"
         range
+        dark
         v-model = 'times_' 
         style="width: 400px; opacity:80%;">
         </Datepicker>
@@ -63,14 +72,14 @@
   </div>
   <div class="q-pa-md">
     <div class="row col-8 inline">
-      <div v-for="offer in offers" :key="offer" class="card" id="box2">
+      <div v-for="offer in offers" :key="offer" class="card mb-3 pt-1 bg-dark text-white" id="box2">
         <img
           src="https://mdbootstrap.com/img/new/standard/nature/184.jpg"
           class="card-img-top"
           alt="..."
         />
         <div class="card-body">
-          <h5 class="card-title">{{ offer.title }}</h5>
+          <h5 class="card-title" style="line-height: 1.5em; height: 3em; overflow: hidden"  >{{ offer.title }}</h5>
           <p class="card-text">{{ offer.subjects[0] }}</p>
           <p class="card-text">{{ "Since " + offer.dateFrom.slice(0, 10) + " " + offer.dateFrom.slice(11, 16) }}</p>
           <p class="card-text">{{ "Until " + offer.dateTo.slice(0, 10) + " " + offer.dateTo.slice(11, 16) }}</p>
@@ -86,10 +95,11 @@
       </div>
     </div>
 
-    <div class="q-pa-lg flex flex-center" style="padding-top: 20px">
+    <div class="q-pa-lg flex flex-center" style="padding-top: 100px">
       <q-pagination
         v-model="current"
-        color="black"
+        color="white"
+        text-color="black"
         :max="10"
         @click="pagination"
         :max-pages="6"
@@ -360,7 +370,7 @@ export default {
 #box2 {
   left: 10px;
   width: 200px;
-  height: 375px;
+  height: 405px;
   margin-right: 20px;
 }
 

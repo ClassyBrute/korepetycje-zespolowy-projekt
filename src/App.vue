@@ -160,7 +160,8 @@ export default {
   background-position: center;
   background-repeat: repeat;
   background-attachment: fixed;
-  overflow: scroll;
+  background-size: cover;
+  overflow: auto;
 }
 
 body,

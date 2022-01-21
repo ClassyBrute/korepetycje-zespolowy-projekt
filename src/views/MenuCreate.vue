@@ -1,6 +1,6 @@
 <template>
   <div id="selectBox" class="item-center">
-    <div class="q-px-md">
+    <div class="q-px-md text-white">
       <h2>Create your notice!</h2>
       <div class="q-gutter-md row justify-center" style="margin-top: 40px">
         <q-select
@@ -11,6 +11,8 @@
           :options="subject"
           label="Subject"
           hide-dropdown-icon
+          label-color="white"
+          dark
           :rules="[myRule]"
           style="width: 250px"
         />
@@ -22,6 +24,8 @@
           :options="level"
           label="Level"
           hide-dropdown-icon
+          label-color="white"
+          dark
           :rules="[myRule]"
           style="width: 250px"
         />
@@ -29,6 +33,7 @@
         <Datepicker 
         placeholder="Select Date Range"
         range
+        dark
         v-model = 'times_' 
         style="width: 400px; opacity:80%;">
         </Datepicker>
@@ -40,6 +45,8 @@
           :options="city"
           label="City"
           hide-dropdown-icon
+          label-color="white"
+          dark
           :rules="[myRule]"
           style="width: 250px"
         />
@@ -52,6 +59,8 @@
           class="inputField"
           outlined
           v-model="text_"
+          label-color="white"
+          dark
           autogrow
           label="Describe your notice"
           style="width: 500px"

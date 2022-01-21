@@ -3,7 +3,7 @@
     <div class="main-body">
       <div class="row gutters-sm">
         <div class="col-md-4 mb-3">
-          <div class="card">
+          <div class="card" style="background: black;">
             <div class="card-body">
               <div class="d-flex flex-column align-items-center text-center">
                 <img
@@ -12,10 +12,10 @@
                   class="rounded-circle"
                   width="150"
                 />
-                <div class="mt-3">
+                <div class="text-white mt-3">
                   <h4>{{ name }}</h4>
-                  <p class="text-secondary mb-1">Pełno prawny korepetytor</p>
-                  <p class="text-muted font-size-sm"> {{ cities }}</p>
+                  <p class="text-white mb-1">Pełno prawny korepetytor</p>
+                  <p class="text-white font-size-sm"> {{ cities }}</p>
                   <button class="btn btn-primary">Message</button>
                 </div>
               </div>
@@ -23,16 +23,16 @@
           </div>
         </div>
         <div class="col-md-7">
-          <div class="card mb-3">
+          <div class="text-white card mb-3" style="background: black;">
             <div class="card-body">
               <div class="row">
                 <div class="col-sm-3">
                   <h6 class="mb-0">Name</h6>
                 </div>
-                <div v-if="!edit" class="col-sm-9 text-secondary">
+                <div v-if="!edit" class="col-sm-9">
                   {{ name }}
                 </div>
-                <div v-if="edit" class="col-sm-9 text-secondary">
+                <div v-if="edit" class="col-sm-9">
                   <form>
                     <input type="text" v-model="this.name" placeholder="Name">
                   </form>
@@ -43,10 +43,10 @@
                 <div class="col-sm-3">
                   <h6 class="mb-0">Surname</h6>
                 </div>
-                <div v-if="!edit" class="col-sm-9 text-secondary">
+                <div v-if="!edit" class="col-sm-9">
                   {{ surname }}
                 </div>
-                <div v-if="edit" class="col-sm-9 text-secondary">
+                <div v-if="edit" class="col-sm-9">
                   <form>
                     <input type="text" v-model="this.surname" placeholder="Surname">
                   </form>
@@ -57,7 +57,7 @@
                 <div class="col-sm-3">
                   <h6 class="mb-0">Email</h6>
                 </div>
-                <div class="col-sm-9 text-secondary">
+                <div class="col-sm-9">
                   {{ email }}
                 </div>
               </div>
@@ -66,10 +66,10 @@
                 <div class="col-sm-3">
                   <h6 class="mb-0">Phone</h6>
                 </div>
-                <div v-if="!edit" class="col-sm-9 text-secondary">
+                <div v-if="!edit" class="col-sm-9">
                   {{ phone }}
                 </div>
-                <div v-if="edit" class="col-sm-9 text-secondary">
+                <div v-if="edit" class="col-sm-9">
                   <form>
                     <input type="text" v-model="this.phone" placeholder="Phone number">
                   </form>
@@ -80,10 +80,10 @@
                 <div class="col-sm-3">
                   <h6 class="mb-0">Birth year</h6>
                 </div>
-                <div v-if="!edit" class="col-sm-9 text-secondary">
+                <div v-if="!edit" class="col-sm-9">
                   {{ age }}
                 </div>
-                <div v-if="edit" class="col-sm-9 text-secondary">
+                <div v-if="edit" class="col-sm-9">
                   <form>
                     <input type="text" v-model="this.age" placeholder="1999-01-01">
                   </form>
@@ -94,10 +94,10 @@
                 <div class="col-sm-3">
                   <h6 class="mb-0">Address</h6>
                 </div>
-                <div v-if="!edit" class="col-sm-9 text-secondary">
+                <div v-if="!edit" class="col-sm-9">
                   {{ cities }}
                 </div>
-                <div v-if="edit" class="col-sm-9 text-secondary">
+                <div v-if="edit" class="col-sm-9">
                   <form>
                     <input type="text" v-model="this.cities" placeholder="City">
                   </form>
@@ -108,7 +108,7 @@
                 <div class="col-sm-3">
                   <h6 class="mb-0">Password</h6>
                 </div>
-                <div class="col-sm-9 text-secondary">
+                <div class="col-sm-9">
                   <form>
                     <input type="password" v-model="this.password" placeholder="Please enter new password">
                   </form>
