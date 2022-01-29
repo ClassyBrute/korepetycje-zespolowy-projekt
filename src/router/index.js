@@ -11,6 +11,7 @@ import FrontPage from '../views/FrontPage.vue'
 import Offer from '../views/Offer.vue'
 import Api from '../views/Api.vue'
 
+
 const routes = [
   {
     path: '/',
@@ -64,7 +65,8 @@ const routes = [
     name: 'Api',
     component: Api,
   },
-  
+
+
 
   //catch all 404
   {

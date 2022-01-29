@@ -16,6 +16,7 @@
                   <div v-if="showEdit" class="col-sm-9">
                     <form>
                       <input
+                        ref="msgInput"
                         type="text"
                         v-model="this.offer[0].subjects[0]"
                         placeholder="Name"
@@ -88,9 +89,13 @@
                   </div>
                   <div v-if="!showEdit" class="col-sm-9">
                     {{
-                      this.offer[0].dateFrom.slice(0, 10) +
+                      this.offer[0].dateFrom.slice(0, 10) + " " + this.offer[0].dateFrom.slice(11, 16) +
                       " - " +
-                      this.offer[0].dateTo.slice(0, 10)
+
+                      (new Date(this.offer[0].dateTo).getTime() - new Date(this.offer[0].dateFrom).getTime() )/ 60000 + "min"
+
+
+                      
                     }}
                   </div>
                   <div
@@ -100,11 +105,30 @@
                   >
                     <Datepicker
                       placeholder="Select Date Range"
-                      range
+                      
                       v-model="times_"
                       style="width: 200px; opacity: 80%"
                     >
                     </Datepicker>
+                  </div>
+
+                  <div
+                    v-if="showEdit"
+                    class="col-sm-9"
+                    style="padding-left: 188px"
+                  >
+                    <q-select
+                      popup-content-class="scroll overflow-hidden"
+                      outlined
+                      v-model="duration_"
+                      :options="duration"
+                      label="Duration"
+                      hide-dropdown-icon
+                      label-color="white"
+                      dark
+                      :rules="[myRule]"
+                      style="width: 250px"
+                    />
                   </div>
                 </div>
                 <hr />
@@ -149,6 +173,14 @@
                       @click="cancel"
                     >
                       Cancel
+                    </button>
+
+                    <button
+                      v-if="showEdit"
+                      class="btn btn-primary"
+                      @click="duplicate"
+                    >
+                      Duplicate
                     </button>
                   </div>
                 </div>
@@ -196,14 +228,18 @@ export default {
       offer_old: [],
       offer_Id: this.offerId,
       loggedId: "",
+      duration_: ref(null),
 
       // dateFrom: this.offer[0].dateFrom.toJSON(),
-      // dateTo: this.offer[0].dateTo.toJSON() ,
+      // dateTo: this.offer[0].dateTo.toJSON(),
     };
   },
 
+ 
+
   mounted() {
     //zapisywanie id zalogowanego id
+
     fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/profile`, {
       method: "GET",
       headers: {
@@ -254,6 +290,7 @@ export default {
   methods: {
     startEdit() {
       this.showEdit = !this.showEdit;
+      
     },
 
     saveEdit() {
@@ -286,6 +323,36 @@ export default {
       });
     },
     // dorobić zamienianie na stare wartości :)
+
+    duplicate(){
+
+      let editData = {
+        subjects: this.offer[0].subjects[0],
+        level: this.offer[0].level[0],
+        // dateFrom: this.offer[0].dateFrom.toJSON(),
+        // dateTo: this.offer[0].dateTo.toJSON() ,
+        cities: this.offer[0].cities[0],
+        title: this.offer[0].title,
+      };
+
+      fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/posts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + readCookie("jwt"),
+        },
+        body: JSON.stringify(editData),
+      }).then((response) => {
+        if (response.status == 400) {
+          alert("Try again");
+          return;
+        }
+        if (response.status == 200) {
+          alert("Great, you duplicated your post :D")
+        }
+      });
+    },
+
     cancel() {
 
       // this.offer_old.map(obj => this.offer);

@@ -137,31 +137,54 @@
     </div>
   </div>
 
-  <div class="q-pa-md">
-    <div class="row col-8 inline">
-      <div v-for="offer in offers" :key="offer" class="card mb-3 pt-1 bg-dark text-white" id="box2">
-        <div class="card-body">
+  <br>
+ 
+  <button class="btn btn-primary" @click=" toggle_tab"> My Offers</button>
+  <button class="btn btn-primary" @click=" toggle_tab"> Reserved</button>
+
+
+  <div class="row col-8 inline" v-if="tabA" >
+    <div v-for="offer in offers" :key="offer" class="card mb-3 pt-1 bg-dark text-white" id="box2">
+      <div class="card-body">
           <h5 style="line-height: 1.5em; height: 3em; overflow: hidden" class="card-title">{{ offer.title }}</h5>
           <p class="card-text">{{ offer.subjects[0] }}</p>
           <p class="card-text">{{ "Since " + offer.dateFrom.slice(0, 10) + " " + offer.dateFrom.slice(11, 16) }}</p>
           <p class="card-text">{{ "Until " + offer.dateTo.slice(0, 10) + " " + offer.dateTo.slice(11, 16) }}</p>
-          <p class="card-text">{{ offer.cities[0] }}</p>
+          <p class="card-text">{{ offer.cities[0] }}</p> -->
           <!-- <p class="card-text">{{ offer.level[0] }}</p> -->
           <!-- <p class="card-text">{{ offer.user }}</p> -->
           <router-link
-            class="nav-link btn btn-primary"
-            :to="{ name: 'Offer', params: { offerId: offer._id } }"
-            >Details</router-link
+          class="nav-link btn btn-primary"
+          :to="{ name: 'Offer', params: { offerId: offer._id } }"
+          >Details</router-link
           >
-        </div>
       </div>
     </div>
   </div>
 
-  <br>
-  <br>
-  <br>
-  <br>
+  <div class="row col-8 inline" v-if="!tabA" >
+    <div v-for="offer in offers" :key="offer" class="card mb-3 pt-1 bg-dark text-white" id="box2">
+      <div class="card-body">
+          <h5 style="line-height: 1.5em; height: 3em; overflow: hidden" class="card-title">{{ offer.title }}</h5>
+          <p class="card-text">{{ offer.subjects[0] }}</p>
+          <p class="card-text">{{ "Since " + offer.dateFrom.slice(0, 10) + " " + offer.dateFrom.slice(11, 16) }}</p>
+          <p class="card-text">{{ "Until " + offer.dateTo.slice(0, 10) + " " + offer.dateTo.slice(11, 16) }}</p>
+          <p class="card-text">{{ offer.cities[0] }}</p> -->
+          <!-- <p class="card-text">{{ offer.level[0] }}</p> -->
+          <!-- <p class="card-text">{{ offer.user }}</p> -->
+          <router-link
+          class="nav-link btn btn-primary"
+          :to="{ name: 'Offer', params: { offerId: offer._id } }"
+          >Details</router-link
+          >
+      </div>
+    </div>
+  </div>
+
+
+
+
+
 </template>
 
 <script>
@@ -176,8 +199,16 @@ function readCookie(name) {
   return null;
 }
 
+import { ref } from 'vue'
+
+import TabA from "../components/TabA";
+import TabB from "../components/TabB";
+
 export default {
   props: ["accountId"],
+  
+ components: { TabA, TabB},
+  
 
   data() {
     return {
@@ -202,6 +233,9 @@ export default {
 
       dane: [],
       offers: [],
+
+      tabA: "true"
+      
     };
   },
 
@@ -294,6 +328,10 @@ export default {
   methods: {
     edit_click() {
       this.edit = !this.edit;
+    },
+
+    toggle_tab(){
+      this.tabA = !this.tabA;
     },
 
     save_click() {

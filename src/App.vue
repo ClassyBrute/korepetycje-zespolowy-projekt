@@ -67,6 +67,14 @@
     <SignUpPopup theme="sale" @close="offSignUp"> </SignUpPopup>
   </div>
 
+  <!-- <button @click="activeTab = 'TabA'"> TabA</button>
+  <button @click="activeTab = 'TabB'"> TabB</button>
+
+  <TabA v-if="activeTab === 'TabA'" />
+  <TabB v-if="activeTab === 'TabB'"/> -->
+ 
+
+
   <footer
     @click="offSignUp"
     class="bg-light text-center text-lg-start fixed-bottom">
@@ -92,15 +100,18 @@ function readCookie(name) {
 
 import SignUpPopup from "./components/SignUpPopup";
 
+
+
 export default {
   name: "App",
-  components: { SignUpPopup },
+  components: { SignUpPopup},
   data() {
     return {
       showSignUp: false,
       loggedIn: false,
       loggedId: "",
       componentKey: 0,
+      
     };
   },
 

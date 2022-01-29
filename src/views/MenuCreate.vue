@@ -30,14 +30,6 @@
           style="width: 250px"
         />
 
-        <Datepicker 
-        placeholder="Select Date Range"
-        range
-        dark
-        v-model = 'times_' 
-        style="width: 400px; opacity:80%;">
-        </Datepicker>
-
         <q-select
           popup-content-class="scroll overflow-hidden"
           outlined
@@ -50,6 +42,28 @@
           :rules="[myRule]"
           style="width: 250px"
         />
+
+        <Datepicker 
+        placeholder="Select Date Range"
+        dark
+        v-model = 'times_' 
+        style="width: 300px; opacity:80%;">
+        </Datepicker>
+
+        <q-select
+          popup-content-class="scroll overflow-hidden"
+          outlined
+          v-model="duration_"
+          :options="duration"
+          label="Duration"
+          hide-dropdown-icon
+          label-color="white"
+          dark
+          :rules="[myRule]"
+          style="width: 250px"
+        />
+
+        
       </div>
       <div
         class="q-gutter-md row justify-center"
@@ -115,6 +129,7 @@ export default {
       times_: new Date(),
       cities_: ref(null),
       text_: ref(null),
+      duration_: ref(null),
 
       subject: [
         { label: "Maths", value: "math" },
@@ -135,6 +150,13 @@ export default {
         { label: "Poznań", value: "poznan" },
         { label: "Legnica", value: "legnica" },
       ],
+
+      duration: [
+        { label: "30 min", value: "1800000" },
+        { label: "45 min", value: "2700000" },
+        { label: "60 min", value: "3600000" },
+        { label: "120 min", value: "7200000" },
+      ],
     };
   },
 
@@ -146,6 +168,7 @@ export default {
     },
 
     submit() {
+      console.log(   new Date(parseInt(this.times_.getTime()) + parseInt(this.duration_.value) ) );
       if (
         this.subjects_ == null ||
         this.levels_ == null ||
@@ -158,8 +181,8 @@ export default {
         let data = {
           subjects: this.subjects_.value,
           level: this.levels_.value,
-          dateFrom: this.times_[0].toJSON(),
-          dateTo: this.times_[1].toJSON(),
+          dateFrom: this.times_.toJSON(),
+          dateTo: new Date(parseInt(this.times_.getTime()) + parseInt(this.duration_.value) ),
           cities: this.cities_.value,
           title: this.text_,
         };
