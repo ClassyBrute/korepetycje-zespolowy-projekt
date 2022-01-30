@@ -80,6 +80,8 @@
           <p class="card-text">{{ "Date: " + offer.dateFrom.slice(0, 10) + "; " + offer.dateFrom.slice(11, 16) }}</p>
           <p class="card-text">{{ "Duration - "  + (new Date(offer.dateTo).getTime() - new Date(offer.dateFrom).getTime() )/ 60000 + "min" }}</p>
           <p class="card-text">{{ offer.cities[0] }}</p>
+          <p class="card-text">{{ "Price - " + offer.price + " zł"}}</p>
+
 
           <!-- <p class="card-text">{{ offer.level[0] }}</p> -->
           <!-- <p class="card-text">{{ offer.user }}</p> -->
@@ -382,7 +384,7 @@ export default {
 #box2 {
   left: 10px;
   width: 200px;
-  height: 300px;
+  height: 330px;
   margin-right: 20px;
 }
 
