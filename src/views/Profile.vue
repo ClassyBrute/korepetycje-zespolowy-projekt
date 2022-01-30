@@ -137,54 +137,47 @@
     </div>
   </div>
 
-  <br>
- 
-  <button class="btn btn-primary" @click=" toggle_tab"> My Offers</button>
-  <button class="btn btn-primary" @click=" toggle_tab"> Reserved</button>
+  <q-btn 
+    class="btn btn-primary" 
+    @click="my_offers"
+    label="My offers"
+    color="dark"
+    size="lg"
+    style="margin-top: 80px; right: 20px;"
+  />
 
+  <q-btn 
+    class="btn btn-primary" 
+    @click="reserved_offers"
+    label="Reserved"
+    color="dark"
+    size="lg"
+    style="margin-top: 80px; left: 20px;"
+  />
 
-  <div class="row col-8 inline" v-if="tabA" >
-    <div v-for="offer in offers" :key="offer" class="card mb-3 pt-1 bg-dark text-white" id="box2">
-      <div class="card-body">
-          <h5 style="line-height: 1.5em; height: 3em; overflow: hidden" class="card-title">{{ offer.title }}</h5>
+  <div class="q-pa-md">
+    <div class="row col-8 inline">
+      <div v-for="offer in offers" :key="offer" class="card mb-10 pt-1 bg-dark text-white " id="box2">
+        <div class="card-body">
+          <h5 class="card-title text-orange" style="line-height: 1.5em; height: 3em; overflow: hidden;"  >{{ offer.title }}</h5>
           <p class="card-text">{{ offer.subjects[0] }}</p>
-          <p class="card-text">{{ "Since " + offer.dateFrom.slice(0, 10) + " " + offer.dateFrom.slice(11, 16) }}</p>
-          <p class="card-text">{{ "Until " + offer.dateTo.slice(0, 10) + " " + offer.dateTo.slice(11, 16) }}</p>
-          <p class="card-text">{{ offer.cities[0] }}</p> -->
+          <p class="card-text">{{ "Date: " + offer.dateFrom.slice(0, 10) + "; " + offer.dateFrom.slice(11, 16) }}</p>
+          <p class="card-text">{{ "Duration - "  + (new Date(offer.dateTo).getTime() - new Date(offer.dateFrom).getTime() )/ 60000 + "min" }}</p>
+          <p class="card-text">{{ offer.cities[0] }}</p>
+          <p class="card-text">{{ "Price - " + offer.price + " zł"}}</p>
+
+
           <!-- <p class="card-text">{{ offer.level[0] }}</p> -->
           <!-- <p class="card-text">{{ offer.user }}</p> -->
           <router-link
-          class="nav-link btn btn-primary"
-          :to="{ name: 'Offer', params: { offerId: offer._id } }"
-          >Details</router-link
+            class="nav-link btn btn-primary bg-black text-orange"
+            :to="{ name: 'Offer', params: { offerId: offer._id } }"
+            >Details</router-link
           >
+        </div>
       </div>
     </div>
   </div>
-
-  <div class="row col-8 inline" v-if="!tabA" >
-    <div v-for="offer in offers" :key="offer" class="card mb-3 pt-1 bg-dark text-white" id="box2">
-      <div class="card-body">
-          <h5 style="line-height: 1.5em; height: 3em; overflow: hidden" class="card-title">{{ offer.title }}</h5>
-          <p class="card-text">{{ offer.subjects[0] }}</p>
-          <p class="card-text">{{ "Since " + offer.dateFrom.slice(0, 10) + " " + offer.dateFrom.slice(11, 16) }}</p>
-          <p class="card-text">{{ "Until " + offer.dateTo.slice(0, 10) + " " + offer.dateTo.slice(11, 16) }}</p>
-          <p class="card-text">{{ offer.cities[0] }}</p> -->
-          <!-- <p class="card-text">{{ offer.level[0] }}</p> -->
-          <!-- <p class="card-text">{{ offer.user }}</p> -->
-          <router-link
-          class="nav-link btn btn-primary"
-          :to="{ name: 'Offer', params: { offerId: offer._id } }"
-          >Details</router-link
-          >
-      </div>
-    </div>
-  </div>
-
-
-
-
-
 </template>
 
 <script>
@@ -199,16 +192,22 @@ function readCookie(name) {
   return null;
 }
 
-import { ref } from 'vue'
-
-import TabA from "../components/TabA";
-import TabB from "../components/TabB";
+import { ref } from "vue";
 
 export default {
   props: ["accountId"],
-  
- components: { TabA, TabB},
-  
+
+  setup() {
+    return {
+      max_pages: ref(null),
+      subjects_: ref(null),
+      levels_: ref(null),
+      times_: [ref(null), ref(null)],
+      ratings_: ref(null),
+      cities_: ref(null),
+      current: ref(1),
+    };
+  },
 
   data() {
     return {
@@ -233,20 +232,21 @@ export default {
 
       dane: [],
       offers: [],
-
-      tabA: "true"
-      
+      pageInfo: [],
     };
   },
 
   mounted() {
-    fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/account/${this.accountId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + readCookie("jwt"),
-      },
-    })
+    fetch(
+      `https://panoramx.ift.uni.wroc.pl:8888/v1/account/${this.accountId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + readCookie("jwt"),
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         this.name = data.firstName;
@@ -261,7 +261,7 @@ export default {
         this.email_old = data.email;
         this.age_old = data.birthday.slice(0, 10);
         this.cities_old = data.cities;
-        this.phone_old = data.phone; 
+        this.phone_old = data.phone;
       });
 
     fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/profile`, {
@@ -274,35 +274,42 @@ export default {
       .then((res) => res.json())
       .then((data) => {
         this.loggedId = data._id;
-        
+
         if (this.loggedId == this.accountId) {
           this.owner = true;
         }
       });
 
-
     this.offers = [];
     this.dane = [];
-    fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/posts?ownerId=${this.accountId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + readCookie("jwt"),
-      },
-    })
+    this.pageInfo = [];
+    fetch(
+      `https://panoramx.ift.uni.wroc.pl:8888/v1/posts?ownerId=${this.accountId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + readCookie("jwt"),
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
-        for (let i = 0; i < data.length; i++) {
-          this.dane.push(data[i]._id);
+        for (let i = 0; i < data.posts.length; i++) {
+          this.dane.push(data.posts[i]._id);
         }
-        for (let i = 0; i < data.length; i++) {
-          fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.dane[i]}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + readCookie("jwt"),
-            },
-          })
+        this.pageInfo = data.pageInfo;
+        for (let i = 0; i < data.posts.length; i++) {
+          fetch(
+            `https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.dane[i]}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + readCookie("jwt"),
+              },
+            }
+          )
             .then((res) => res.json())
             .then((offer) => {
               this.offers.push(offer);
@@ -319,10 +326,11 @@ export default {
                 .then((res) => res.json())
                 .then((user) => {
                   this.offers[i].user = user.firstName;
+                  this.max_pages = this.pageInfo.lastPage + 1;
                 });
             });
         }
-      })
+      });
   },
 
   methods: {
@@ -330,8 +338,112 @@ export default {
       this.edit = !this.edit;
     },
 
-    toggle_tab(){
-      this.tabA = !this.tabA;
+    my_offers() {
+      this.offers = [];
+      this.dane = [];
+      this.pageInfo = [];
+      fetch(
+        `https://panoramx.ift.uni.wroc.pl:8888/v1/posts?ownerId=${this.accountId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + readCookie("jwt"),
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          for (let i = 0; i < data.posts.length; i++) {
+            this.dane.push(data.posts[i]._id);
+          }
+          this.pageInfo = data.pageInfo;
+          for (let i = 0; i < data.posts.length; i++) {
+            fetch(
+              `https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.dane[i]}`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer " + readCookie("jwt"),
+                },
+              }
+            )
+              .then((res) => res.json())
+              .then((offer) => {
+                this.offers.push(offer);
+                fetch(
+                  `https://panoramx.ift.uni.wroc.pl:8888/v1/account/${offer.ownerId}`,
+                  {
+                    method: "GET",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: "Bearer " + readCookie("jwt"),
+                    },
+                  }
+                )
+                  .then((res) => res.json())
+                  .then((user) => {
+                    this.offers[i].user = user.firstName;
+                    this.max_pages = this.pageInfo.lastPage + 1;
+                  });
+              });
+          }
+        });
+    },
+
+    reserved_offers() {
+      this.offers = [];
+      this.dane = [];
+      this.pageInfo = [];
+      fetch(
+        `https://panoramx.ift.uni.wroc.pl:8888/v1/posts?interestedIn=${this.accountId}&interestedInBool=1`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + readCookie("jwt"),
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          for (let i = 0; i < data.posts.length; i++) {
+            this.dane.push(data.posts[i]._id);
+          }
+          this.pageInfo = data.pageInfo;
+          for (let i = 0; i < data.posts.length; i++) {
+            fetch(
+              `https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.dane[i]}`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer " + readCookie("jwt"),
+                },
+              }
+            )
+              .then((res) => res.json())
+              .then((offer) => {
+                this.offers.push(offer);
+                fetch(
+                  `https://panoramx.ift.uni.wroc.pl:8888/v1/account/${offer.ownerId}`,
+                  {
+                    method: "GET",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: "Bearer " + readCookie("jwt"),
+                    },
+                  }
+                )
+                  .then((res) => res.json())
+                  .then((user) => {
+                    this.offers[i].user = user.firstName;
+                    this.max_pages = this.pageInfo.lastPage + 1;
+                  });
+              });
+          }
+        });
     },
 
     save_click() {
@@ -345,7 +457,7 @@ export default {
         phoneNumber: this.phone,
         birthday: this.age,
       };
-      
+
       console.log(this.password);
 
       if (editData.password == "") {
@@ -354,12 +466,11 @@ export default {
 
       console.log(this.password);
 
-
       fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/profile`, {
         method: "PUT",
         headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + readCookie("jwt"),
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + readCookie("jwt"),
         },
         body: JSON.stringify(editData),
       }).then((response) => {
@@ -390,9 +501,8 @@ export default {
       this.phone = this.phone_old;
 
       this.edit = !this.edit;
-    }
+    },
   },
-
 };
 </script>
 
@@ -427,6 +537,13 @@ body {
   flex: 1 1 auto;
   min-height: 1px;
   padding: 1rem;
+}
+
+#box2 {
+  left: 10px;
+  width: 200px;
+  height: 330px;
+  margin-right: 20px;
 }
 
 .gutters-sm {

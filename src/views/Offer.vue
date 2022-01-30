@@ -11,16 +11,15 @@
                     <h5 class="mb-0">Subject</h5>
                   </div>
                   <div v-if="!showEdit" class="col-sm-9">
-                    {{ this.offer[0].subjects[0] }}
+                    {{ subjects_ }}
                   </div>
                   <div v-if="showEdit" class="col-sm-9">
                     <form>
                       <q-select 
                         dense
-                        popup-content-class="scroll 
-                        overflow-hidden"
+                        
                         outlined
-                        v-model="subjects_"
+                        v-model="this.offer[0].subjects[0]"
                         :options="subject"
                         label="Subject"
                         hide-dropdown-icon
@@ -53,14 +52,49 @@
                   <div v-if="showEdit" class="col-sm-9">
                     <form>
 
-                      <q-select 
+                      <q-input
                         dense
-                        popup-content-class="scroll 
-                        overflow-hidden"
+                        
                         outlined
-                        v-model="subjects_"
+                        v-model="this.offer[0].title"
                         :options="subject"
                         label="Title"
+                        hide-dropdown-icon
+                        label-color="white"
+                        dark
+                        :rules="[myRule]"
+                        hide-bottom-space
+                        style="width: 550px"
+                      />
+
+                      <!-- <input
+                        type="text"
+                        v-model="this.offer[0].title"
+                        placeholder="Name"
+                      /> -->
+                    </form>
+                  </div>
+                </div>
+
+                <hr />
+
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="mb-0">Description</h5>
+                  </div>
+                  <div v-if="!showEdit" class="col-sm-9">
+                    {{ this.offer[0].description }}
+                  </div>
+                  <div v-if="showEdit" class="col-sm-9">
+                    <form>
+
+                      <q-input
+                        dense
+                        
+                        outlined
+                        v-model="this.offer[0].description"
+                        
+                        label="Description"
                         hide-dropdown-icon
                         label-color="white"
                         dark
@@ -84,7 +118,7 @@
                     <h5 class="mb-0">Level</h5>
                   </div>
                   <div v-if="!showEdit" class="col-sm-9">
-                    {{ this.offer[0].level[0] }}
+                    {{ levels_ }}
                   </div>
                   <div v-if="showEdit" class="col-sm-9">
                     <form>
@@ -94,8 +128,8 @@
                         popup-content-class="scroll 
                         overflow-hidden"
                         outlined
-                        v-model="subjects_"
-                        :options="subject"
+                        v-model="this.offer[0].level[0]"
+                        :options="level"
                         label="Level"
                         hide-dropdown-icon
                         label-color="white"
@@ -121,7 +155,7 @@
                     <h5 class="mb-0">Cities</h5>
                   </div>
                   <div v-if="!showEdit" class="col-sm-9">
-                    {{ this.offer[0].cities[0] }}
+                    {{ cities_ }}
                   </div>
                   <div v-if="showEdit" class="col-sm-9">
                     <form>
@@ -129,11 +163,10 @@
 
                       <q-select 
                         dense
-                        popup-content-class="scroll 
-                        overflow-hidden"
+                        
                         outlined
-                        v-model="subjects_"
-                        :options="subject"
+                        v-model="this.offer[0].cities[0]"
+                        :options="city"
                         label="Cities"
                         hide-dropdown-icon
                         label-color="white"
@@ -159,19 +192,20 @@
                     <h5 class="mb-0">Price</h5>
                   </div>
                   <div v-if="!showEdit" class="col-sm-9">
-                    {{ this.offer[0].cities[0] }}
+                    {{ this.offer[0].price + " zł" }} 
                   </div>
                   <div v-if="showEdit" class="col-sm-9">
                     <form>
 
 
-                      <q-select 
+                      <q-input 
                         dense
                         popup-content-class="scroll 
                         overflow-hidden"
                         outlined
-                        v-model="subjects_"
-                        :options="subject"
+                        v-model.number="this.offer[0].price"
+                        mask="#########"
+                        suffix="zł"
                         label="Price"
                         hide-dropdown-icon
                         label-color="white"
@@ -226,8 +260,8 @@
                         popup-content-class="scroll 
                         overflow-hidden"
                         outlined
-                        v-model="subjects_"
-                        :options="subject"
+                        v-model="duration_"
+                        :options="duration"
                         label="Duration"
                         hide-dropdown-icon
                         label-color="white"
@@ -339,7 +373,7 @@ function readCookie(name) {
   }
   return null;
 }
-
+import { ref } from "vue";
 export default {
   props: ["offerId"],
 
@@ -349,16 +383,76 @@ export default {
 
   data() {
     return {
+      subjects_: ref(null),
+      levels_: ref(null),
+      times_: new Date(),
+      cities_: ref(null),
+      text_: ref(null),
+      duration_: ref(null),
+      price_: ref(null),
+      title_: ref(null),
+
+
+
       showEdit: false,
       checkLogged: false,
       offer: [],
       offer_old: [],
       offer_Id: this.offerId,
       loggedId: "",
+      duration_: "",
       // duration_: ref(null),
 
       // dateFrom: this.offer[0].dateFrom.toJSON(),
       // dateTo: this.offer[0].dateTo.toJSON(),
+
+      subject: [
+        { label: "Maths", value: "math" },
+        { label: "Physics", value: "physics" },
+        { label: "Chemistry", value: "chemistry" },
+        { label: "English", value: "english" },
+        { label: "Biology", value: "biology" },
+        { label: "Geography", value: "geography" },
+        { label: "Art", value: "art" },
+        { label: "Computer science", value: "computer science" },
+        { label: "Polish", value: "polish" },
+        { label: "German", value: "german" },
+        { label: "Spanish", value: "spanish" },
+        { label: "Japanese", value: "japanese" },
+        { label: "French", value: "french" },
+        { label: "Russian", value: "russian" },
+        { label: "History", value: "history" },
+      ],
+
+      level: [
+        { label: "Primary School", value: "primary school" },
+        { label: "Middle School", value: "middle school" },
+        { label: "High School", value: "high school" },
+        { label: "University", value: "university" },
+      ],
+
+      city: [
+        { label: "Wrocław", value: "Wrocław" },
+        { label: "Poznań", value: "Poznań" },
+        { label: "Warszawa", value: "Warszawa" },
+        { label: "Kraków", value: "Kraków" },
+        { label: "Łódź", value: "Łódź" },
+        { label: "Gdańsk", value: "Gdańsk" },
+        { label: "Szczecin", value: "Szczecin" },
+        { label: "Bydgoszcz", value: "Bydgoszcz" },
+        { label: "Lublin", value: "Lublin" },
+        { label: "Białystok", value: "Białystok" },
+        { label: "Katowice", value: "Katowice" },
+        { label: "Gdynia", value: "Gdynia" },
+        { label: "Częstochowa", value: "Częstochowa" },
+      ],
+
+      duration: [
+        { label: "30 min", value: "1800000" },
+        { label: "45 min", value: "2700000" },
+        { label: "60 min", value: "3600000" },
+        { label: "120 min", value: "7200000" },
+      ],
     };
   },
 
@@ -410,6 +504,10 @@ export default {
           .then((res) => res.json())
           .then((user) => {
             this.offer.user = user.firstName;
+            this.duration_ = (new Date(this.offer[0].dateTo).getTime() - new Date(this.offer[0].dateFrom).getTime() )/ 60000 + "min";
+            this.subjects_ = this.offer[0].subjects[0];
+            this.levels_ = this.offer[0].level[0];
+            this.cities_ = this.offer[0].cities[0];
           });
       });
   },
@@ -424,11 +522,14 @@ export default {
       this.showEdit = !this.showEdit;
 
       let editData = {
-        subjects: this.offer[0].subjects[0],
-        level: this.offer[0].level[0],
+        subjects: this.offer[0].subjects[0].value,
+        level: this.offer[0].level[0].value,
+        description: this.offer[0].description,
+        price: this.offer[0].price,
+
         // dateFrom: this.offer[0].dateFrom.toJSON(),
         // dateTo: this.offer[0].dateTo.toJSON() ,
-        cities: this.offer[0].cities[0],
+        cities: this.offer[0].cities[0].value,
         title: this.offer[0].title,
       };
 
@@ -446,6 +547,32 @@ export default {
         }
         if (response.status == 200) {
           console.log("sukces");
+          if (this.offer[0].subjects[0].hasOwnProperty('value') ){
+            this.subjects_ = this.offer[0].subjects[0].value;
+          }else{
+            this.subjects_ = this.offer[0].subjects[0];
+          }
+          if ( this.offer[0].level[0].hasOwnProperty('value') ){
+            this.levels_= this.offer[0].level[0].value;
+          
+          }else{
+            this.levels_ = this.offer[0].level[0];
+          }
+          if (this.offer[0].cities[0].hasOwnProperty('value') ){
+            this.cities_ = this.offer[0].cities[0].value;
+          }else{
+            this.cities_ = this.offer[0].cities[0];
+          }
+
+
+
+
+
+
+
+
+
+          console.log(this.subjects_,this.levels_, this.cities_)
         }
       });
     },
@@ -476,6 +603,7 @@ export default {
         }
         if (response.status == 200) {
           alert("Great, you duplicated your post :D")
+          
         }
       });
     },
@@ -571,14 +699,14 @@ p {
 
 .property-description {
   background-color: #fafafc;
-  height: 50em;
+  height: 52em;
   width: 55em;
   position: absolute;
   bottom: 0em;
   -webkit-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
   -o-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
   transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-  padding: 2em 1em;
+  padding: 0em 1em;
   text-align: center;
 }
 </style>

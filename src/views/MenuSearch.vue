@@ -4,8 +4,10 @@
       <h2>Search for what you desire!</h2>
       <div class="q-gutter-md row justify-center" style="margin-top: 40px">
         <q-select
-          popup-content-class="scroll overflow-hidden"
-          outlined
+          
+          filled
+          color = "white"
+          bg-color = "grey-10"
           v-model="subjects_"
           :options="subject"
           label="Subject"
@@ -17,7 +19,9 @@
 
         <q-select
           popup-content-class="scroll overflow-hidden"
-          outlined
+          filled
+          color = "white"
+          bg-color = "grey-10"
           v-model="levels_"
           :options="level"
           label="Level"
@@ -27,12 +31,15 @@
           style="width: 250px;"
         />
 
-        <q-select
+        <q-input
           popup-content-class="scroll overflow-hidden"
-          outlined
+          filled
+          color = "white"
+          bg-color = "grey-10"
           v-model="ratings_"
           :options="rating"
-          label="Rating"
+          label="Max price"
+          
           label-color="white"
           dark
           hide-dropdown-icon
@@ -40,8 +47,10 @@
         />
 
         <q-select
-          popup-content-class="scroll overflow-hidden"
-          outlined
+          
+          filled
+          color = "white"
+          bg-color = "grey-10"
           v-model="cities_"
           :options="city"
           label="City"
@@ -140,26 +149,49 @@ export default {
         { label: "Physics", value: "physics" },
         { label: "Chemistry", value: "chemistry" },
         { label: "English", value: "english" },
+        { label: "Biology", value: "biology" },
+        { label: "Geography", value: "geography" },
+        { label: "Art", value: "art" },
+        { label: "Computer science", value: "computer science" },
+        { label: "Polish", value: "polish" },
+        { label: "German", value: "german" },
+        { label: "Spanish", value: "spanish" },
+        { label: "Japanese", value: "japanese" },
+        { label: "French", value: "french" },
+        { label: "Russian", value: "russian" },
+        { label: "History", value: "history" },
       ],
 
       level: [
-        { label: "Primary School", value: "basic" },
-        { label: "Middle School", value: "intermediate" },
-        { label: "High School", value: "advanced" },
-        { label: "University", value: "advanced" },
+        { label: "Primary School", value: "primary school" },
+        { label: "Middle School", value: "middle school" },
+        { label: "High School", value: "high school" },
+        { label: "University", value: "university" },
       ],
 
       city: [
-        { label: "Wrocław", value: "wroclaw" },
-        { label: "Poznań", value: "poznan" },
-        { label: "Legnica", value: "legnica" },
+        { label: "Wrocław", value: "Wrocław" },
+        { label: "Poznań", value: "Poznań" },
+        { label: "Warszawa", value: "Warszawa" },
+        { label: "Kraków", value: "Kraków" },
+        { label: "Łódź", value: "Łódź" },
+        { label: "Gdańsk", value: "Gdańsk" },
+        { label: "Szczecin", value: "Szczecin" },
+        { label: "Bydgoszcz", value: "Bydgoszcz" },
+        { label: "Lublin", value: "Lublin" },
+        { label: "Białystok", value: "Białystok" },
+        { label: "Katowice", value: "Katowice" },
+        { label: "Gdynia", value: "Gdynia" },
+        { label: "Częstochowa", value: "Częstochowa" },
       ],
 
-      rating: [
-        { label: "1", value: "1" },
-        { label: "2", value: "2" },
-        { label: "3", value: "3" },
+      duration: [
+        { label: "30 min", value: "1800000" },
+        { label: "45 min", value: "2700000" },
+        { label: "60 min", value: "3600000" },
+        { label: "120 min", value: "7200000" },
       ],
+
     };
   },
 
@@ -175,6 +207,7 @@ export default {
     search() { 
       this.offers = [];
       this.dane = [];
+      this.pageInfo = [];
       
 
       if (this.times_ == null) {
@@ -184,7 +217,7 @@ export default {
       let variables = [
         [this.subjects_, 'subjects='], 
         [this.levels_, 'level='], 
-        [this.ratings_, 'ratings='], 
+        [parseInt(this.ratings_), 'price='], 
         [this.times_[0], 'dateFrom='],
         [this.times_[1], 'dateTo='],
         [this.cities_, 'cities='], 
@@ -194,6 +227,7 @@ export default {
       let amount = 0;
       
       variables.forEach(function(variable) {
+        console.log(variable[0]);
         if (variable[0] != null) {
           if ((variable[1] == 'dateFrom=') || (variable[1] == 'dateTo=')) {
             if (!variable[0].hasOwnProperty('_value')){
@@ -207,11 +241,24 @@ export default {
               }
             }
           }
-          else{
+          else if ( (variable[1] == "price=") && (variable[0] != null)){
+          
+              if (amount >= 1) {
+                link = link + '&';
+              }
+              
+
+              link = link + variable[1] + variable[0];
+              console.log(link);
+              amount += 1;
+            
+          }else{
             if (variable[0].value != null){
               if (amount >= 1) {
                 link = link + '&';
               }
+              console.log(variable[0]);
+
               link = link + variable[1] + variable[0].value;
               console.log(link);
               amount += 1;
@@ -219,6 +266,8 @@ export default {
           }
         }
       });
+              
+
 
       fetch(`${link}`,{
           method: "GET",
@@ -229,10 +278,12 @@ export default {
         })
         .then((res) => res.json())
         .then((data) => {
-          for (let i = 0; i < data.length; i++) {
-            this.dane.push(data[i]._id);
+          for (let i = 0; i < data.posts.length; i++) {
+            this.dane.push(data.posts[i]._id);
+            
           }
-          for (let i = 0; i < data.length; i++) {
+          this.pageInfo = data.pageInfo;
+          for (let i = 0; i < data.posts.length; i++) {
             fetch(
               `https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.dane[i]}`,
               {
@@ -259,6 +310,9 @@ export default {
                   .then((res) => res.json())
                   .then((user) => {
                     this.offers[i].user = user.firstName;
+                    this.max_pages = this.pageInfo.lastPage + 1;
+                    console.log(this.offers)
+                    
                   });
               });
           }
@@ -270,7 +324,8 @@ export default {
       this.offers = [];
       this.dane = [];
       this.pageInfo =[];
-      
+
+
       fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/posts?currentPage=${this.current-1}`, {
         method: "GET",
         headers: {
@@ -313,6 +368,7 @@ export default {
                   .then((res) => res.json())
                   .then((user) => {
                     this.offers[i].user = user.firstName;
+                    this.max_pages = this.pageInfo.lastPage + 1;
                     
                   });
               });
