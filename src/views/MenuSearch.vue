@@ -77,9 +77,10 @@
         <div class="card-body">
           <h5 class="card-title text-orange" style="line-height: 1.5em; height: 3em; overflow: hidden;"  >{{ offer.title }}</h5>
           <p class="card-text">{{ offer.subjects[0] }}</p>
-          <p class="card-text">{{ "Since " + offer.dateFrom.slice(0, 10) + " " + offer.dateFrom.slice(11, 16) }}</p>
-          <p class="card-text">{{ "Until " + offer.dateTo.slice(0, 10) + " " + offer.dateTo.slice(11, 16) }}</p>
+          <p class="card-text">{{ "Date: " + offer.dateFrom.slice(0, 10) + "; " + offer.dateFrom.slice(11, 16) }}</p>
+          <p class="card-text">{{ "Duration - "  + (new Date(offer.dateTo).getTime() - new Date(offer.dateFrom).getTime() )/ 60000 + "min" }}</p>
           <p class="card-text">{{ offer.cities[0] }}</p>
+
           <!-- <p class="card-text">{{ offer.level[0] }}</p> -->
           <!-- <p class="card-text">{{ offer.user }}</p> -->
           <router-link
@@ -90,19 +91,20 @@
         </div>
       </div>
     </div>
-
-    <div class="q-pa-lg flex flex-center" style="padding-top: 100px">
+ 
+    <div class="q-pa-lg flex  row flex-center" style="margin-top:40px">
       <q-pagination
         v-model="current"
         color="white"
         text-color="black"
-        :max="10"
+        :max="max_pages"
         @click="pagination"
         :max-pages="6"
         :boundary-numbers="false"
       />
-    </div>
+   </div>
   </div>
+  
 </template>
 
 
@@ -123,6 +125,7 @@ import { ref } from "vue";
 export default {
   setup() {
     return {
+      max_pages : ref(null),
       subjects_: ref(null),
       levels_: ref(null),
       times_: [ref(null), ref(null)],
@@ -162,6 +165,7 @@ export default {
     return {
       dane: [],
       offers: [],
+      pageInfo:[],
     };
   },
 
@@ -169,6 +173,7 @@ export default {
     search() { 
       this.offers = [];
       this.dane = [];
+      
 
       if (this.times_ == null) {
         this.times_ = [];      
@@ -262,7 +267,9 @@ export default {
     pagination() {
       this.offers = [];
       this.dane = [];
-      fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/posts?page=${this.current-1}`, {
+      this.pageInfo =[];
+      
+      fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/posts?currentPage=${this.current-1}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -271,10 +278,13 @@ export default {
       })
         .then((res) => res.json())
         .then((data) => {
-          for (let i = 0; i < data.length; i++) {
-            this.dane.push(data[i]._id);
+          for (let i = 0; i < data.posts.length; i++) {
+            this.dane.push(data.posts[i]._id);
           }
-          for (let i = 0; i < data.length; i++) {
+          this.pageInfo = data.pageInfo;
+          console.log(data.pageInfo)
+
+          for (let i = 0; i < data.posts.length; i++) {
             fetch(
               `https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.dane[i]}`,
               {
@@ -301,6 +311,7 @@ export default {
                   .then((res) => res.json())
                   .then((user) => {
                     this.offers[i].user = user.firstName;
+                    
                   });
               });
           }
@@ -312,6 +323,7 @@ export default {
   mounted() {
     this.offers = [];
     this.dane = [];
+    this.pageInfo =[];
     fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/posts`, {
       method: "GET",
       headers: {
@@ -321,10 +333,12 @@ export default {
     })
       .then((res) => res.json())
       .then((data) => {
-        for (let i = 0; i < data.length; i++) {
-          this.dane.push(data[i]._id);
+        for (let i = 0; i < data.posts.length; i++) {
+          this.dane.push(data.posts[i]._id);
         }
-        for (let i = 0; i < data.length; i++) {
+        this.pageInfo = data.pageInfo;
+        console.log(data.pageInfo)
+        for (let i = 0; i < data.posts.length; i++) {
           fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.dane[i]}`, {
             method: "GET",
             headers: {
@@ -348,6 +362,8 @@ export default {
                 .then((res) => res.json())
                 .then((user) => {
                   this.offers[i].user = user.firstName;
+                  this.max_pages = this.pageInfo.lastPage + 1;
+                  
                 });
             });
         }
@@ -370,7 +386,5 @@ export default {
   margin-right: 20px;
 }
 
-.boxcard {
-  display: flex;
-}
+
 </style>

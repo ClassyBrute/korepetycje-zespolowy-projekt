@@ -4,60 +4,68 @@
       <h2>Create your notice!</h2>
       <div class="q-gutter-md row justify-center" style="margin-top: 40px">
         <q-select
-          popup-content-class="scroll 
-          overflow-hidden"
-          outlined
+          color = "white"
+          bg-color = "grey-10"
+          
+          
+          filled
           v-model="subjects_"
           :options="subject"
           label="Subject"
           hide-dropdown-icon
-          label-color="white"
           dark
           :rules="[myRule]"
-          style="width: 250px"
+          style="width: 250px; overflow-x :hidden"
         />
 
         <q-select
+          color = "white"
+          bg-color = "grey-10"
           popup-content-class="scroll overflow-hidden"
-          outlined
+          filled
           v-model="levels_"
           :options="level"
           label="Level"
           hide-dropdown-icon
-          label-color="white"
           dark
           :rules="[myRule]"
           style="width: 250px"
         />
 
         <q-select
-          popup-content-class="scroll overflow-hidden"
-          outlined
+          color = "white"
+          bg-color = "grey-10"
+          
+          filled
           v-model="cities_"
           :options="city"
           label="City"
           hide-dropdown-icon
-          label-color="white"
           dark
           :rules="[myRule]"
           style="width: 250px"
         />
 
+        
+        
+
         <Datepicker 
-        placeholder="Select Date Range"
+        placeholder="Select Date"
         dark
         v-model = 'times_' 
         style="width: 300px; opacity:80%;">
         </Datepicker>
 
         <q-select
+          filled
           popup-content-class="scroll overflow-hidden"
-          outlined
+          color = "white"
+          bg-color = "grey-10"
           v-model="duration_"
           :options="duration"
           label="Duration"
+          
           hide-dropdown-icon
-          label-color="white"
           dark
           :rules="[myRule]"
           style="width: 250px"
@@ -69,15 +77,45 @@
         class="q-gutter-md row justify-center"
         style="margin-top: 40px; margin-bottom: 40px"
       >
+
         <q-input
+          filled
+          color = "white"
+          bg-color = "grey-10"
+          v-model.number="price_"
+          mask="#########"
+          suffix="zł"
+          type="number"
+          dark
+          autogrow
+          label="Price"
+          style="width: 250px;"
+        />
+
+        <q-input
+          filled
+          color = "white"
+          bg-color = "grey-10"
           class="inputField"
-          outlined
+          
+          v-model="title_"
+          dark
+          autogrow
+          label="Title"
+          style="width: 500px;"
+        />
+
+        <q-input
+          filled
+          color = "white"
+          bg-color = "grey-10"
+          class="inputField"
+          
           v-model="text_"
-          label-color="white"
           dark
           autogrow
           label="Describe your notice"
-          style="width: 500px"
+          style="width: 500px;"
         />
       </div>
     </div>
@@ -130,25 +168,48 @@ export default {
       cities_: ref(null),
       text_: ref(null),
       duration_: ref(null),
+      price_: ref(null),
+      title_: ref(null),
 
       subject: [
         { label: "Maths", value: "math" },
         { label: "Physics", value: "physics" },
         { label: "Chemistry", value: "chemistry" },
         { label: "English", value: "english" },
+        { label: "Biology", value: "biology" },
+        { label: "Geography", value: "geography" },
+        { label: "Art", value: "art" },
+        { label: "Computer science", value: "computer science" },
+        { label: "Polish", value: "polish" },
+        { label: "German", value: "german" },
+        { label: "Spanish", value: "spanish" },
+        { label: "Japanese", value: "japanese" },
+        { label: "French", value: "french" },
+        { label: "Russian", value: "russian" },
+        { label: "History", value: "history" },
       ],
 
       level: [
-        { label: "Primary School", value: "basic" },
-        { label: "Middle School", value: "intermediate" },
-        { label: "High School", value: "advanced" },
-        { label: "University", value: "advanced" },
+        { label: "Primary School", value: "primary school" },
+        { label: "Middle School", value: "middle school" },
+        { label: "High School", value: "high school" },
+        { label: "University", value: "university" },
       ],
 
       city: [
-        { label: "Wrocław", value: "wroclaw" },
-        { label: "Poznań", value: "poznan" },
-        { label: "Legnica", value: "legnica" },
+        { label: "Wrocław", value: "Wrocław" },
+        { label: "Poznań", value: "Poznań" },
+        { label: "Warszawa", value: "Warszawa" },
+        { label: "Kraków", value: "Kraków" },
+        { label: "Łódź", value: "Łódź" },
+        { label: "Gdańsk", value: "Gdańsk" },
+        { label: "Szczecin", value: "Szczecin" },
+        { label: "Bydgoszcz", value: "Bydgoszcz" },
+        { label: "Lublin", value: "Lublin" },
+        { label: "Białystok", value: "Białystok" },
+        { label: "Katowice", value: "Katowice" },
+        { label: "Gdynia", value: "Gdynia" },
+        { label: "Częstochowa", value: "Częstochowa" },
       ],
 
       duration: [
@@ -174,17 +235,22 @@ export default {
         this.levels_ == null ||
         this.times_ == null ||
         this.cities_ == null ||
-        this.text_ == null
+        this.text_ == null ||
+        this.duration_ == null ||
+        this.price_ == null ||
+        this.title_ == null
       ) {
         alert("Please make a selection in every field");
       } else {
         let data = {
           subjects: this.subjects_.value,
           level: this.levels_.value,
+          description: this.text_,
+          price: this.price_,
           dateFrom: this.times_.toJSON(),
           dateTo: new Date(parseInt(this.times_.getTime()) + parseInt(this.duration_.value) ),
           cities: this.cities_.value,
-          title: this.text_,
+          title: this.title_,
         };
 
         fetch("https://panoramx.ift.uni.wroc.pl:8888/v1/posts", {
@@ -220,4 +286,6 @@ export default {
 #selectBox {
   margin-top: 100px;
 }
+
+
 </style>

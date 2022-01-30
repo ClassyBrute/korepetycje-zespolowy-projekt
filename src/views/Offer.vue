@@ -15,12 +15,29 @@
                   </div>
                   <div v-if="showEdit" class="col-sm-9">
                     <form>
-                      <input
+                      <q-select 
+                        dense
+                        popup-content-class="scroll 
+                        overflow-hidden"
+                        outlined
+                        v-model="subjects_"
+                        :options="subject"
+                        label="Subject"
+                        hide-dropdown-icon
+                        label-color="white"
+                        dark
+                        :rules="[myRule]"
+                        hide-bottom-space
+                        style="width: 550px"
+                      />
+
+
+                      <!-- <input
                         ref="msgInput"
                         type="text"
                         v-model="this.offer[0].subjects[0]"
                         placeholder="Name"
-                      />
+                      /> -->
                     </form>
                   </div>
                 </div>
@@ -35,11 +52,28 @@
                   </div>
                   <div v-if="showEdit" class="col-sm-9">
                     <form>
-                      <input
+
+                      <q-select 
+                        dense
+                        popup-content-class="scroll 
+                        overflow-hidden"
+                        outlined
+                        v-model="subjects_"
+                        :options="subject"
+                        label="Title"
+                        hide-dropdown-icon
+                        label-color="white"
+                        dark
+                        :rules="[myRule]"
+                        hide-bottom-space
+                        style="width: 550px"
+                      />
+
+                      <!-- <input
                         type="text"
                         v-model="this.offer[0].title"
                         placeholder="Name"
-                      />
+                      /> -->
                     </form>
                   </div>
                 </div>
@@ -54,11 +88,29 @@
                   </div>
                   <div v-if="showEdit" class="col-sm-9">
                     <form>
-                      <input
+
+                      <q-select 
+                        dense
+                        popup-content-class="scroll 
+                        overflow-hidden"
+                        outlined
+                        v-model="subjects_"
+                        :options="subject"
+                        label="Level"
+                        hide-dropdown-icon
+                        label-color="white"
+                        hide-bottom-space
+                        dark
+                        :rules="[myRule]"
+                        style="width: 550px"
+                      />
+                      
+
+                      <!-- <input
                         type="text"
                         v-model="this.offer[0].level[0]"
                         placeholder="Name"
-                      />
+                      /> -->
                     </form>
                   </div>
                 </div>
@@ -73,14 +125,72 @@
                   </div>
                   <div v-if="showEdit" class="col-sm-9">
                     <form>
-                      <input
+
+
+                      <q-select 
+                        dense
+                        popup-content-class="scroll 
+                        overflow-hidden"
+                        outlined
+                        v-model="subjects_"
+                        :options="subject"
+                        label="Cities"
+                        hide-dropdown-icon
+                        label-color="white"
+                        dark
+                        hide-bottom-space
+                        :rules="[myRule]"
+                        style="width: 550px"
+                      />
+
+                      <!-- <input
                         type="text"
                         v-model="this.offer[0].cities[0]"
                         placeholder="Name"
-                      />
+                      /> -->
                     </form>
                   </div>
                 </div>
+
+                <hr />
+
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="mb-0">Price</h5>
+                  </div>
+                  <div v-if="!showEdit" class="col-sm-9">
+                    {{ this.offer[0].cities[0] }}
+                  </div>
+                  <div v-if="showEdit" class="col-sm-9">
+                    <form>
+
+
+                      <q-select 
+                        dense
+                        popup-content-class="scroll 
+                        overflow-hidden"
+                        outlined
+                        v-model="subjects_"
+                        :options="subject"
+                        label="Price"
+                        hide-dropdown-icon
+                        label-color="white"
+                        dark
+                        hide-bottom-space
+                        :rules="[myRule]"
+                        style="width: 550px"
+                      />
+
+                      <!-- <input
+                        type="text"
+                        v-model="this.offer[0].cities[0]"
+                        placeholder="Name"
+                      /> -->
+                    </form>
+                  </div>
+                </div>
+
+
                 <hr />
 
                 <div class="row">
@@ -100,16 +210,33 @@
                   </div>
                   <div
                     v-if="showEdit"
-                    class="col-sm-9"
-                    style="padding-left: 188px"
+                    class="col-sm-9 row"
+                    style="width:560px"
                   >
                     <Datepicker
-                      placeholder="Select Date Range"
-                      
+                      placeholder="Select Date"
+                      dark
                       v-model="times_"
-                      style="width: 200px; opacity: 80%"
+                      style="width: 260px; opacity: 80%"
                     >
                     </Datepicker>
+
+                    <q-select 
+                        dense
+                        popup-content-class="scroll 
+                        overflow-hidden"
+                        outlined
+                        v-model="subjects_"
+                        :options="subject"
+                        label="Duration"
+                        hide-dropdown-icon
+                        label-color="white"
+                        dark
+                        hide-bottom-space
+                        :rules="[myRule]"
+                        style="width: 300px"
+                      />
+
                   </div>
 
                   <div
@@ -117,7 +244,7 @@
                     class="col-sm-9"
                     style="padding-left: 188px"
                   >
-                    <q-select
+                    <!-- <q-select
                       popup-content-class="scroll overflow-hidden"
                       outlined
                       v-model="duration_"
@@ -128,7 +255,7 @@
                       dark
                       :rules="[myRule]"
                       style="width: 250px"
-                    />
+                    /> -->
                   </div>
                 </div>
                 <hr />
@@ -228,7 +355,7 @@ export default {
       offer_old: [],
       offer_Id: this.offerId,
       loggedId: "",
-      duration_: ref(null),
+      // duration_: ref(null),
 
       // dateFrom: this.offer[0].dateFrom.toJSON(),
       // dateTo: this.offer[0].dateTo.toJSON(),
@@ -423,7 +550,7 @@ p {
 }
 
 .property-card {
-  height: 37em;
+  height: 47em;
   width: 55em;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -444,14 +571,14 @@ p {
 
 .property-description {
   background-color: #fafafc;
-  height: 40em;
+  height: 50em;
   width: 55em;
   position: absolute;
   bottom: 0em;
   -webkit-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
   -o-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
   transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-  padding: 0.5em 1em;
+  padding: 2em 1em;
   text-align: center;
 }
 </style>
