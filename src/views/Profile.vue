@@ -237,6 +237,7 @@ export default {
   },
 
   mounted() {
+    
     fetch(
       `https://panoramx.ift.uni.wroc.pl:8888/v1/account/${this.accountId}`,
       {
@@ -342,6 +343,8 @@ export default {
       this.offers = [];
       this.dane = [];
       this.pageInfo = [];
+      console.log(this.$globalVariable);
+
       fetch(
         `https://panoramx.ift.uni.wroc.pl:8888/v1/posts?ownerId=${this.accountId}`,
         {

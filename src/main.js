@@ -9,5 +9,8 @@ import 'mdb-vue-ui-kit/css/mdb.min.css'
 import { Quasar } from 'quasar'
 import quasarUserOptions from './quasar-user-options'
 
+let app = createApp(App)
 
-createApp(App).use(Quasar, quasarUserOptions).use(router).component('Datepicker', Datepicker).mount('#app')
+app.config.globalProperties.globalVar = 'globalVar'
+
+app.use(Quasar, quasarUserOptions).use(router).component('Datepicker', Datepicker).mount('#app')

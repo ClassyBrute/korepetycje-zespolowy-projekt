@@ -101,16 +101,17 @@ function readCookie(name) {
 import SignUpPopup from "./components/SignUpPopup";
 
 
-
 export default {
   name: "App",
   components: { SignUpPopup},
+  
   data() {
     return {
       showSignUp: false,
       loggedIn: false,
       loggedId: "",
       componentKey: 0,
+      
       
     };
   },
@@ -126,6 +127,9 @@ export default {
       .then((res) => res.json())
       .then((data) => {
         this.loggedId = data._id;
+        this.$globalVariable = this.loggedId;
+        console.log(this.$globalVariable);
+
       });
   },
 

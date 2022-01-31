@@ -238,7 +238,7 @@
 
                       (new Date(this.offer[0].dateTo).getTime() - new Date(this.offer[0].dateFrom).getTime() )/ 60000 + "min"
 
-
+                      
                       
                     }}
                   </div>
@@ -250,6 +250,7 @@
                     <Datepicker
                       placeholder="Select Date"
                       dark
+                      
                       v-model="times_"
                       style="width: 260px; opacity: 80%"
                     >
@@ -343,16 +344,22 @@
                     >
                       Duplicate
                     </button>
+
+                    
                   </div>
                 </div>
 
-                <div v-if="!checkLogged" class="row">
+                <div v-if="!checkLogged " class="row">
                   <div class="col-sm-12">
-                    <button class="btn btn-primary" @click="reservation">
+                    <button v-if="!isRegistered " class="btn btn-primary" @click="reservation">
                       Reserve
+                    </button>
+                    <button v-if="isRegistered " class="btn btn-primary" @click="unReservation">
+                      Unreserve
                     </button>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
@@ -391,20 +398,16 @@ export default {
       duration_: ref(null),
       price_: ref(null),
       title_: ref(null),
-
-
-
+    
       showEdit: false,
       checkLogged: false,
       offer: [],
       offer_old: [],
       offer_Id: this.offerId,
       loggedId: "",
-      duration_: "",
-      // duration_: ref(null),
+      checkInterested: false,
+      isRegistered: false,
 
-      // dateFrom: this.offer[0].dateFrom.toJSON(),
-      // dateTo: this.offer[0].dateTo.toJSON(),
 
       subject: [
         { label: "Maths", value: "math" },
@@ -475,10 +478,31 @@ export default {
         if (this.loggedId == this.offer[0].ownerId) {
           this.checkLogged = true;
         }
+
+        
       });
   },
 
   created() {
+    //Jak cos sie "zepsuje" to wywalamy to 
+    fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/profile`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + readCookie("jwt"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        this.loggedId = data._id;
+
+        // if (this.loggedId == this.offer[0].ownerId) {
+        //   this.checkLogged = true;
+        // }
+
+        
+      });
+
     fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.offer_Id}`, {
       method: "GET",
       headers: {
@@ -490,6 +514,7 @@ export default {
       .then((offers) => {
         this.offer.push(offers);
         this.offer_old.push(offers);
+
 
         fetch(
           `https://panoramx.ift.uni.wroc.pl:8888/v1/account/${offers.ownerId}`,
@@ -504,12 +529,20 @@ export default {
           .then((res) => res.json())
           .then((user) => {
             this.offer.user = user.firstName;
-            this.duration_ = (new Date(this.offer[0].dateTo).getTime() - new Date(this.offer[0].dateFrom).getTime() )/ 60000 + "min";
+            this.duration_ = (new Date(this.offer[0].dateTo).getTime() - new Date(this.offer[0].dateFrom).getTime() )/ 60000 ;
             this.subjects_ = this.offer[0].subjects[0];
             this.levels_ = this.offer[0].level[0];
             this.cities_ = this.offer[0].cities[0];
+            this.times_ = this.offer[0].dateFrom;
+            // console.log(this.loggedId, this.offer[0].interestedIn[0])
+            if (this.loggedId == this.offer[0].interestedIn[0]) {
+              
+              this.isRegistered = true;
+            }
+            // console.log(new Date(this.offer[0].dateFrom));
           });
       });
+    
   },
 
   methods: {
@@ -520,18 +553,21 @@ export default {
 
     saveEdit() {
       this.showEdit = !this.showEdit;
-
+      // console.log(new Date(this.offer[0].dateFrom).toJSON());
+      
       let editData = {
         subjects: this.offer[0].subjects[0].value,
         level: this.offer[0].level[0].value,
         description: this.offer[0].description,
         price: this.offer[0].price,
-
+        dateFrom: new Date(this.times_),
+        dateTo: new Date(parseInt(this.times_.getTime()) + parseInt(this.duration_.value)) ,
         // dateFrom: this.offer[0].dateFrom.toJSON(),
         // dateTo: this.offer[0].dateTo.toJSON() ,
         cities: this.offer[0].cities[0].value,
         title: this.offer[0].title,
       };
+      
 
       fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/post/${this.offer_Id}`, {
         method: "PUT",
@@ -565,13 +601,6 @@ export default {
           }
 
 
-
-
-
-
-
-
-
           console.log(this.subjects_,this.levels_, this.cities_)
         }
       });
@@ -579,15 +608,41 @@ export default {
     // dorobić zamienianie na stare wartości :)
 
     duplicate(){
-
+      
+      // console.log(this.duration_.value);
       let editData = {
-        subjects: this.offer[0].subjects[0],
-        level: this.offer[0].level[0],
+        subjects: this.offer[0].subjects[0].value,
+        level: this.offer[0].level[0].value,
+        description: this.offer[0].description,
+        price: this.offer[0].price,
+        dateFrom: new Date(this.times_),
+        dateTo: null,
         // dateFrom: this.offer[0].dateFrom.toJSON(),
         // dateTo: this.offer[0].dateTo.toJSON() ,
-        cities: this.offer[0].cities[0],
+        cities: this.offer[0].cities[0].value,
         title: this.offer[0].title,
       };
+      if (this.duration_.hasOwnProperty('value')){
+        editData.dateTo = new Date(parseInt(new Date(this.times_).getTime()) + parseInt(this.duration_.value))
+        
+      }else{
+        editData.dateTo = new Date(parseInt(new Date(this.times_).getTime()) + parseInt(this.duration_))
+      }
+
+      if (this.offer[0].subjects[0].value == null) {
+        editData.subjects = this.subjects_;
+      }
+      if (this.offer[0].level[0].value == null) {
+        editData.level = this.levels_;
+      }
+      if (this.offer[0].cities[0].value == null) {
+        editData.cities = this.cities_;
+      }
+
+
+
+
+
 
       fetch(`https://panoramx.ift.uni.wroc.pl:8888/v1/posts`, {
         method: "POST",
@@ -642,6 +697,34 @@ export default {
         }
       });
     },
+
+    unReservation() {
+      fetch(
+        `https://panoramx.ift.uni.wroc.pl:8888/v1/reservation/${this.offer_Id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + readCookie("jwt"),
+          },
+        }
+      ).then((response) => {
+        if (response.status == 400) {
+          alert("Bad request");
+        }
+        if (response.status == 404) {
+          alert("Not found");
+        }
+        if (response.status == 409) {
+          alert("Someone already registered");
+        }
+        if (response.status == 200) {
+          console.log("sukces wyrezerwowalo");
+          alert("sukces wyrezerwowalo")
+        }
+      });
+    },
+
   },
 };
 </script>
